@@ -23,6 +23,9 @@
             <button id="openScoreboardBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
                 🏆 Scoreboard
             </button>
+            <button id="openStudentExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+                👥 Student List
+            </button>
             <button id="openExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
                 📁 Word Bank
             </button>
@@ -56,8 +59,11 @@
                     <select id="studentSelectDropdown" class="btn btn-secondary" style="background: rgba(15,23,42,0.9); font-weight: 700; padding: 0.6rem 1rem; outline: none; border: 1px solid var(--border-accent);">
                         <!-- Options generated dynamically -->
                     </select>
-                    <button id="addStudentBtn" class="btn btn-secondary" title="Add New Student" style="padding: 0.6rem 0.9rem;">
+                    <button id="addStudentBtn" class="btn btn-secondary" title="Add Single Student" style="padding: 0.6rem 0.9rem;">
                         + New
+                    </button>
+                    <button id="importStudentsExcelBtn" class="btn btn-secondary" title="Upload Student List from Excel (.xlsx / .xls / .csv)" style="padding: 0.6rem 0.9rem; border-color: var(--primary-cyan); color: var(--primary-cyan);">
+                        📁 Excel
                     </button>
                 </div>
             </div>
@@ -275,6 +281,42 @@
             <div style="display: flex; gap: 1rem;">
                 <button id="cancelStudentBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
                 <button id="saveStudentBtn" class="btn btn-primary" style="flex: 1;">Add Student</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Upload Student List from Excel -->
+    <div class="modal-overlay" id="uploadStudentsModal">
+        <div class="modal-card" style="max-width: 560px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff;">👥 Upload Student List</h2>
+                <button id="closeStudentsModalBtn" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;">✕</button>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.25rem;">
+                Select an Excel file (<code style="color: var(--primary-cyan);">.xlsx, .xls</code>) or CSV containing participant names.
+            </p>
+
+            <div style="background: rgba(0, 240, 255, 0.04); border: 1.5px dashed var(--border-glow); border-radius: 16px; padding: 1.25rem; text-align: center; margin-bottom: 1.25rem;">
+                <input type="file" id="studentsExcelFileInput" accept=".xlsx, .xls, .csv" style="margin-bottom: 0.75rem; color: #ffffff; width: 100%;" />
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    Column header can be: <b>"Name"</b>, <b>"Student Name"</b>, <b>"Participant"</b>, or any 1-column list.
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; background: rgba(255, 255, 255, 0.03); padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid var(--border-subtle);">
+                <label style="display: flex; align-items: center; gap: 0.6rem; color: #e2e8f0; font-size: 0.88rem; cursor: pointer;">
+                    <input type="radio" name="studentImportMode" value="append" checked style="accent-color: var(--primary-cyan);" />
+                    <span><b>Add to existing students</b> (preserves current scores)</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.6rem; color: #e2e8f0; font-size: 0.88rem; cursor: pointer;">
+                    <input type="radio" name="studentImportMode" value="replace" style="accent-color: var(--primary-cyan);" />
+                    <span><b>Replace entire student list</b> with new file</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelStudentsExcelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                <button id="uploadStudentsExcelSubmitBtn" class="btn btn-primary" style="flex: 1.5;">Import Students</button>
             </div>
         </div>
     </div>

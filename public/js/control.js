@@ -74,6 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelExcelBtnEl = document.getElementById('cancelExcelBtn');
     const openExcelModalBtnEl = document.getElementById('openExcelModalBtn');
 
+    // Students Excel Upload Elements
+    const uploadStudentsModalEl = document.getElementById('uploadStudentsModal');
+    const openStudentExcelModalBtnEl = document.getElementById('openStudentExcelModalBtn');
+    const importStudentsExcelBtnEl = document.getElementById('importStudentsExcelBtn');
+    const closeStudentsModalBtnEl = document.getElementById('closeStudentsModalBtn');
+    const cancelStudentsExcelBtnEl = document.getElementById('cancelStudentsExcelBtn');
+    const studentsExcelFileInputEl = document.getElementById('studentsExcelFileInput');
+    const uploadStudentsExcelSubmitBtnEl = document.getElementById('uploadStudentsExcelSubmitBtn');
+
     const scoreboardModalEl = document.getElementById('scoreboardModal');
     const openScoreboardBtnEl = document.getElementById('openScoreboardBtn');
     const closeScoreboardBtnEl = document.getElementById('closeScoreboardBtn');
@@ -441,6 +450,65 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadExcelBtnEl.textContent = 'Upload & Refresh Grid';
         }
     });
+
+    // Student Excel Upload Modal Handlers
+    function openStudentsModal() {
+        if (uploadStudentsModalEl) {
+            if (studentsExcelFileInputEl) studentsExcelFileInputEl.value = '';
+            uploadStudentsModalEl.classList.add('active');
+        }
+    }
+
+    function closeStudentsModal() {
+        if (uploadStudentsModalEl) {
+            uploadStudentsModalEl.classList.remove('active');
+        }
+    }
+
+    if (openStudentExcelModalBtnEl) openStudentExcelModalBtnEl.addEventListener('click', openStudentsModal);
+    if (importStudentsExcelBtnEl) importStudentsExcelBtnEl.addEventListener('click', openStudentsModal);
+    if (closeStudentsModalBtnEl) closeStudentsModalBtnEl.addEventListener('click', closeStudentsModal);
+    if (cancelStudentsExcelBtnEl) cancelStudentsExcelBtnEl.addEventListener('click', closeStudentsModal);
+
+    if (uploadStudentsExcelSubmitBtnEl) {
+        uploadStudentsExcelSubmitBtnEl.addEventListener('click', async () => {
+            const file = studentsExcelFileInputEl?.files?.[0];
+            if (!file) {
+                showToast('Please choose an Excel file (.xlsx / .xls / .csv) first', 'warning');
+                return;
+            }
+
+            const importModeEl = document.querySelector('input[name="studentImportMode"]:checked');
+            const replaceExisting = importModeEl ? importModeEl.value === 'replace' : false;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('replaceExisting', replaceExisting);
+
+            try {
+                uploadStudentsExcelSubmitBtnEl.disabled = true;
+                uploadStudentsExcelSubmitBtnEl.textContent = 'Importing...';
+
+                const res = await fetch(`/api/competitions/${competitionCode}/upload-students`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast(`Success! Imported ${data.count} student(s). Total: ${data.totalStudents}`, 'success');
+                    closeStudentsModal();
+                } else {
+                    showToast(`Import failed: ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast(`Network error: ${err.message}`, 'danger');
+            } finally {
+                uploadStudentsExcelSubmitBtnEl.disabled = false;
+                uploadStudentsExcelSubmitBtnEl.textContent = 'Import Students';
+            }
+        });
+    }
 
     // Scoreboard Modal
     function openScoreboard() {

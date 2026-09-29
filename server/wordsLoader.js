@@ -89,6 +89,74 @@ class WordsLoader {
             return { success: false, error: err.message };
         }
     }
+
+    parseStudentsExcel(buffer) {
+        try {
+            const workbook = xlsx.read(buffer, { type: 'buffer' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Method 1: Check object rows with column headers
+            const objRows = xlsx.utils.sheet_to_json(worksheet);
+            const names = [];
+            const headerKeywords = ['name', 'student', 'participant', 'candidate'];
+            
+            if (objRows.length > 0) {
+                for (const row of objRows) {
+                    let foundName = null;
+                    for (const key of Object.keys(row)) {
+                        if (headerKeywords.some(kw => key.toLowerCase().includes(kw))) {
+                            const val = String(row[key]).trim();
+                            if (val && isNaN(val)) {
+                                foundName = val;
+                                break;
+                            }
+                        }
+                    }
+                    if (!foundName) {
+                        for (const key of Object.keys(row)) {
+                            const val = String(row[key]).trim();
+                            if (val && isNaN(val) && val.length > 1) {
+                                foundName = val;
+                                break;
+                            }
+                        }
+                    }
+                    if (foundName && !names.includes(foundName)) {
+                        names.push(foundName);
+                    }
+                }
+            }
+
+            // Method 2: Raw 2D array parsing fallback (for single-column or unheadered sheets)
+            if (names.length === 0) {
+                const rawRows = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+                const skipKeywords = ['student name', 'name', 'student', 'students', 'participant', 'participants', 's.no', 'sno', 'no', '#', 'sl no', 'serial no'];
+                for (const row of rawRows) {
+                    if (!Array.isArray(row)) continue;
+                    for (const cell of row) {
+                        if (cell !== undefined && cell !== null) {
+                            const val = String(cell).trim();
+                            if (val && !skipKeywords.includes(val.toLowerCase()) && isNaN(val) && val.length > 1) {
+                                if (!names.includes(val)) {
+                                    names.push(val);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (names.length > 0) {
+                return { success: true, count: names.length, names };
+            }
+            return { success: false, error: 'No valid student names found in the Excel sheet.' };
+        } catch (err) {
+            console.error('[WordsLoader] Error parsing Students Excel:', err);
+            return { success: false, error: err.message };
+        }
+    }
 }
 
 module.exports = new WordsLoader();

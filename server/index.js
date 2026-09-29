@@ -122,6 +122,23 @@ app.post('/api/competitions/:code/upload-words', requireCompetition, excelUpload
     return res.status(400).json({ success: false, error: result.error });
 });
 
+// API: Upload custom Excel student list
+app.post('/api/competitions/:code/upload-students', requireCompetition, excelUpload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ success: false, error: 'No file uploaded.' });
+    const replaceExisting = req.body.replaceExisting === 'true' || req.body.replaceExisting === true;
+    const result = wordsLoader.parseStudentsExcel(req.file.buffer);
+    if (result.success) {
+        req.competition.importStudents(result.names, replaceExisting);
+        broadcastState(req.competition);
+        return res.json({ 
+            success: true, 
+            count: result.count, 
+            totalStudents: req.competition.state.students.length 
+        });
+    }
+    return res.status(400).json({ success: false, error: result.error });
+});
+
 // API: Upload a single audio file for a specific word
 app.post('/api/competitions/:code/upload-audio', requireCompetition, audioUpload.single('audio'), (req, res) => {
     if (!req.file) return res.status(400).json({ success: false, error: 'No audio file uploaded.' });

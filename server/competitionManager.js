@@ -401,6 +401,44 @@ class Competition {
         return { success: true, student: newStudent };
     }
 
+    importStudents(namesList, replaceExisting = false) {
+        if (!Array.isArray(namesList) || namesList.length === 0) {
+            return { success: false, error: 'No student names provided.' };
+        }
+
+        const newStudents = namesList.map((name, index) => ({
+            id: `s_${Date.now()}_${index}`,
+            name: name.trim(),
+            scoreR1: 0,
+            scoreR2: 0,
+            scoreTB: 0,
+            totalScore: 0,
+            questionsCompleted: 0
+        }));
+
+        if (replaceExisting) {
+            this.state.students = newStudents;
+        } else {
+            const existingNames = this.state.students.map(s => s.name.toLowerCase());
+            for (const s of newStudents) {
+                if (!existingNames.includes(s.name.toLowerCase())) {
+                    this.state.students.push(s);
+                    existingNames.push(s.name.toLowerCase());
+                }
+            }
+        }
+
+        if (this.state.students.length > 0) {
+            const exists = this.state.students.some(s => s.id === this.state.currentStudentId);
+            if (!exists) {
+                this.state.currentStudentId = this.state.students[0].id;
+            }
+        }
+
+        this.saveState();
+        return { success: true, count: this.state.students.length };
+    }
+
     changeRound(roundType) {
         let roundKey = 'round_1';
         let roundTitle = 'ROUND 1 — SPELL IT';
