@@ -1,0 +1,219 @@
+{
+  "competitionName": "ALPHA.bet 2026 - TEST",
+  "competitionCode": "TEST",
+  "isPaused": false,
+  "isScoreboardVisible": false,
+  "currentRound": "ROUND 1 — SPELL IT",
+  "roundKey": "round_1",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790659774401",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Unique",
+      "meaning": "being the only one of its kind",
+      "audioFile": "unique.mp3"
+    },
+    {
+      "id": "q_2_1790659774401",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Nightingale",
+      "meaning": "a small, brown European bird known especially for the beautiful song of the male",
+      "audioFile": "nightingale.mp3"
+    },
+    {
+      "id": "q_3_1790659774401",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Radioactive",
+      "meaning": "producing powerful and dangerous energy that comes from the breaking up of atoms",
+      "audioFile": "radioactive.mp3"
+    },
+    {
+      "id": "q_4_1790659774401",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Harness",
+      "meaning": "a piece of equipment with straps and belts, used to control or hold",
+      "audioFile": "harness.mp3"
+    },
+    {
+      "id": "q_5_1790659774401",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Terrestrial",
+      "meaning": "on or relating to the earth",
+      "audioFile": "terrestrial.mp3"
+    },
+    {
+      "id": "q_6_1790659774401",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Recede",
+      "meaning": "to move backward",
+      "audioFile": "recede.mp3"
+    },
+    {
+      "id": "q_7_1790659774401",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Acquiesce",
+      "meaning": "to accept or agree to something, often unwillingly:",
+      "audioFile": "acquiesce.mp3"
+    },
+    {
+      "id": "q_8_1790659774401",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Beheld",
+      "meaning": "see or observe",
+      "audioFile": "beheld.mp3"
+    },
+    {
+      "id": "q_9_1790659774401",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Abridged",
+      "meaning": "having been shortened",
+      "audioFile": "abridged.mp3"
+    },
+    {
+      "id": "q_10_1790659774401",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Ecosystem",
+      "meaning": "group of living organisms that live in and interact with each other in a specific environment.",
+      "audioFile": "ecosystem.mp3"
+    },
+    {
+      "id": "q_11_1790659774401",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Delicious",
+      "meaning": "having a very pleasant taste or smell",
+      "audioFile": "delicious.mp3"
+    },
+    {
+      "id": "q_12_1790659774401",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Palanquin",
+      "meaning": "a big covered box-like vehicle usually with a seat for one person",
+      "audioFile": "palanquin.mp3"
+    },
+    {
+      "id": "q_13_1790659774401",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Bandage",
+      "meaning": "a strip of woven material used to bind up a wound",
+      "audioFile": "bandage.mp3"
+    },
+    {
+      "id": "q_14_1790659774401",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Biotic",
+      "meaning": "relating to or resulting from living organisms.",
+      "audioFile": "biotic.mp3"
+    },
+    {
+      "id": "q_15_1790659774401",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Hastily",
+      "meaning": "said or done in a hurry",
+      "audioFile": "hastily.mp3"
+    },
+    {
+      "id": "q_16_1790659774401",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Nectar",
+      "meaning": "a sweet liquid produced by flowers and collected by bee",
+      "audioFile": "nectar.mp3"
+    },
+    {
+      "id": "q_17_1790659774401",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Deficiency",
+      "meaning": "a lack or shortage.",
+      "audioFile": "deficiency.mp3"
+    },
+    {
+      "id": "q_18_1790659774401",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Effluent",
+      "meaning": "liquid waste that is sent out from factories or other places",
+      "audioFile": "effluent.mp3"
+    },
+    {
+      "id": "q_19_1790659774401",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Ablution",
+      "meaning": "an act of washing oneself",
+      "audioFile": "ablution.mp3"
+    },
+    {
+      "id": "q_20_1790659774401",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Cartilage",
+      "meaning": "strong, flexible connective tissue that protects your joints and bones.",
+      "audioFile": "cartilage.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "available",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "available",
+    "7": "available",
+    "8": "available",
+    "9": "available",
+    "10": "available",
+    "11": "available",
+    "12": "available",
+    "13": "available",
+    "14": "available",
+    "15": "available",
+    "16": "available",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [],
+  "activeQuestion": null,
+  "lastResult": null,
+  "roundSettings": {
+    "questionsPerStudent": 5
+  }
+}
