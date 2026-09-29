@@ -1,0 +1,219 @@
+{
+  "competitionName": "ALPHA.bet 2026 - SIM8K7",
+  "competitionCode": "SIM8K7",
+  "isPaused": false,
+  "isScoreboardVisible": false,
+  "currentRound": "ROUND 1 — SPELL IT",
+  "roundKey": "round_1",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790670348612",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Panorama",
+      "meaning": "a view over a wide area of land.",
+      "audioFile": "panorama.mp3"
+    },
+    {
+      "id": "q_2_1790670348612",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Lichens",
+      "meaning": "any of numerous plant like living things made up of an alga and a fungus growing together on a solid surface (as a rock or a tree)",
+      "audioFile": "lichens.mp3"
+    },
+    {
+      "id": "q_3_1790670348612",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Martyrs",
+      "meaning": "a person who is killed because of their religious or other beliefs.",
+      "audioFile": "martyrs.mp3"
+    },
+    {
+      "id": "q_4_1790670348612",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Sausages",
+      "meaning": "an item of food in the form of a cylindrical length of minced  MEAT",
+      "audioFile": "sausages.mp3"
+    },
+    {
+      "id": "q_5_1790670348612",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Hastily",
+      "meaning": "said or done in a hurry",
+      "audioFile": "hastily.mp3"
+    },
+    {
+      "id": "q_6_1790670348612",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Lateral Roots",
+      "meaning": "smaller roots that emerge horizontally from the taproot or the main root.",
+      "audioFile": "lateral roots.mp3"
+    },
+    {
+      "id": "q_7_1790670348612",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Harmony",
+      "meaning": "agreement",
+      "audioFile": "harmony.mp3"
+    },
+    {
+      "id": "q_8_1790670348612",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Hath",
+      "meaning": "Have",
+      "audioFile": "hath.mp3"
+    },
+    {
+      "id": "q_9_1790670348612",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Deck",
+      "meaning": "a flat area for walking on, built across the space between the sides of a boat",
+      "audioFile": "deck.mp3"
+    },
+    {
+      "id": "q_10_1790670348612",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Vanishing",
+      "meaning": "disappear suddenly and completely.",
+      "audioFile": "vanishing.mp3"
+    },
+    {
+      "id": "q_11_1790670348612",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Tapioca",
+      "meaning": "small, hard pieces of the dried and crushed root of the cassava plant",
+      "audioFile": "tapioca.mp3"
+    },
+    {
+      "id": "q_12_1790670348612",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Vigour",
+      "meaning": "physical strength and good health.",
+      "audioFile": "vigour.mp3"
+    },
+    {
+      "id": "q_13_1790670348612",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Latch",
+      "meaning": "a device for keeping a door or gate closed",
+      "audioFile": "latch.mp3"
+    },
+    {
+      "id": "q_14_1790670348612",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Journalist",
+      "meaning": "a person who writes news stories or articles for a newspaper or magazine or broadcasts them",
+      "audioFile": "journalist.mp3"
+    },
+    {
+      "id": "q_15_1790670348612",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Oriental",
+      "meaning": "relating to the countries of East and Southeast Asia",
+      "audioFile": "oriental.mp3"
+    },
+    {
+      "id": "q_16_1790670348612",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Biogas",
+      "meaning": "a mixture of methane and carbon dioxide produced by the bacterial decomposition of organic wastes",
+      "audioFile": "biogas.mp3"
+    },
+    {
+      "id": "q_17_1790670348612",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Defied",
+      "meaning": "to refuse to obey a person, decision, law, situation,",
+      "audioFile": "defied.mp3"
+    },
+    {
+      "id": "q_18_1790670348612",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Geology",
+      "meaning": "the study of the rocks and similar substances that make up the earth's surface",
+      "audioFile": "geology.mp3"
+    },
+    {
+      "id": "q_19_1790670348612",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Recreational",
+      "meaning": "connected with ways of enjoying yourself when you are not working:",
+      "audioFile": "recreational.mp3"
+    },
+    {
+      "id": "q_20_1790670348612",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Waterfalls",
+      "meaning": "a place where water flows over the edge of a steep, high cliff in hills or mountains",
+      "audioFile": "waterfalls.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "available",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "available",
+    "7": "available",
+    "8": "available",
+    "9": "available",
+    "10": "available",
+    "11": "available",
+    "12": "available",
+    "13": "available",
+    "14": "available",
+    "15": "available",
+    "16": "available",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [],
+  "activeQuestion": null,
+  "lastResult": null,
+  "roundSettings": {
+    "questionsPerStudent": 5
+  }
+}

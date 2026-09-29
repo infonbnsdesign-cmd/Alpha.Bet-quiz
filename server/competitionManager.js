@@ -118,7 +118,8 @@ class Competition {
             activeQuestion: null,
             lastResult: null,
             roundSettings: {
-                questionsPerStudent: 5
+                questionsPerStudent: 5,
+                studentTypingEnabled: true
             }
         };
     }
@@ -130,7 +131,8 @@ class Competition {
                 const parsed = JSON.parse(data);
                 if (parsed && parsed.questions && parsed.gridState) {
                     if (parsed.isScoreboardVisible === undefined) parsed.isScoreboardVisible = false;
-                    if (!parsed.roundSettings) parsed.roundSettings = { questionsPerStudent: 5 };
+                    if (!parsed.roundSettings) parsed.roundSettings = { questionsPerStudent: 5, studentTypingEnabled: true };
+                    if (parsed.roundSettings.studentTypingEnabled === undefined) parsed.roundSettings.studentTypingEnabled = true;
                     this.state = parsed;
                     console.log(`[Competition ${this.code}] Restored state from disk.`);
                     return;
@@ -373,6 +375,13 @@ class Competition {
         return { success: true, questionsPerStudent: n };
     }
 
+    setStudentTyping(enabled) {
+        if (!this.state.roundSettings) this.state.roundSettings = {};
+        this.state.roundSettings.studentTypingEnabled = !!enabled;
+        this.saveState();
+        return { success: true, studentTypingEnabled: this.state.roundSettings.studentTypingEnabled };
+    }
+
     setCurrentStudent(studentId) {
         const student = this.state.students.find(s => s.id === studentId);
         if (student) {
@@ -490,8 +499,10 @@ class Competition {
 
     resetEntireCompetition() {
         const savedQuestionsPerStudent = this.state.roundSettings?.questionsPerStudent || 5;
+        const savedTyping = this.state.roundSettings?.studentTypingEnabled !== undefined ? this.state.roundSettings.studentTypingEnabled : true;
         this.state = this.getInitialState();
         this.state.roundSettings.questionsPerStudent = savedQuestionsPerStudent;
+        this.state.roundSettings.studentTypingEnabled = savedTyping;
         this.saveState();
         return { success: true };
     }

@@ -13,68 +13,112 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Public assets
+// Public assets — with caching for static files
 const publicPath = path.join(__dirname, '../public');
-app.use(express.static(publicPath));
+app.use(express.static(publicPath, {
+    maxAge: '1h',
+    etag: true,
+    lastModified: true
+}));
 
-// --- AUDIO SERVING & LOOKUP ---
+// --- AUDIO SERVING & LOOKUP (CACHED FOR SPEED) ---
 const externalAudioPath = path.resolve(__dirname, '../../Alpha.bet face 2/audio');
 const uploadedAudioPath = path.join(publicPath, 'audio/uploaded');
 fs.mkdirSync(uploadedAudioPath, { recursive: true });
 
-// Smart case-insensitive audio finder: matches 'apple', 'Apple', 'APPLE', 'apple.mp3', 'Apple.wav', etc.
+const AUDIO_EXTS = ['.mp3', '.wav', '.ogg', '.m4a', '.aac'];
+
+// ========== IN-MEMORY AUDIO CACHE ==========
+// Maps normalized word name -> absolute file path
+// Built once at startup, refreshed only on upload/delete
+let audioCache = new Map();
+
+function buildAudioCache() {
+    const startTime = Date.now();
+    const newCache = new Map();
+    const searchDirs = [
+        uploadedAudioPath,                    // highest priority
+        path.join(publicPath, 'audio'),       // local audio folder
+        externalAudioPath                      // external audio bank
+    ];
+
+    // Scan in REVERSE priority order so higher-priority dirs overwrite
+    for (let i = searchDirs.length - 1; i >= 0; i--) {
+        const dir = searchDirs[i];
+        if (!dir || !fs.existsSync(dir)) continue;
+        try {
+            scanDirRecursive(dir, newCache);
+        } catch (e) {
+            console.warn(`[AudioCache] Error scanning ${dir}:`, e.message);
+        }
+    }
+
+    audioCache = newCache;
+    console.log(`[AudioCache] Built cache with ${audioCache.size} audio files in ${Date.now() - startTime}ms`);
+}
+
+function scanDirRecursive(dir, cache) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            scanDirRecursive(fullPath, cache);
+        } else if (entry.isFile()) {
+            const ext = path.extname(entry.name).toLowerCase();
+            if (AUDIO_EXTS.includes(ext)) {
+                const normalizedName = path.basename(entry.name, ext)
+                    .toLowerCase()
+                    .replace(/[^a-z0-9_-]/g, '_');
+                cache.set(normalizedName, fullPath);
+            }
+        }
+    }
+}
+
+// Build cache once at startup
+buildAudioCache();
+
+// Fast cached lookup — O(1) Map lookup instead of scanning thousands of files
 function findAudioFileForWord(word) {
     if (!word) return null;
     const clean = String(word).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
-    const searchDirs = [
-        uploadedAudioPath,
-        path.join(publicPath, 'audio'),
-        externalAudioPath
-    ];
-
-    const audioExts = ['.mp3', '.wav', '.ogg', '.m4a', '.aac'];
-
-    for (const dir of searchDirs) {
-        if (!dir || !fs.existsSync(dir)) continue;
-        try {
-            const files = fs.readdirSync(dir);
-            for (const file of files) {
-                const ext = path.extname(file).toLowerCase();
-                if (!audioExts.includes(ext)) continue;
-                const base = path.basename(file, ext).toLowerCase().replace(/[^a-z0-9_-]/g, '_');
-                if (base === clean) {
-                    return path.join(dir, file);
-                }
-            }
-        } catch (e) {}
-    }
-    return null;
+    return audioCache.get(clean) || null;
 }
 
-// API: Audio lookup endpoint by word name (case-insensitive: matches 'Apple', 'apple', 'APPLE', etc.)
+// Rebuild cache after uploads/deletes
+function refreshAudioCache() {
+    buildAudioCache();
+}
+
+// API: Audio lookup — now instant via cache
 app.get('/api/audio-lookup/:word', (req, res) => {
     const word = req.params.word;
     const filePath = findAudioFileForWord(word);
     if (filePath && fs.existsSync(filePath)) {
+        res.set({
+            'Cache-Control': 'public, max-age=86400',
+            'X-Audio-Source': 'cached-lookup'
+        });
         return res.sendFile(filePath);
     }
     return res.status(404).send('Audio not found');
 });
 
-// Serve direct /audio/:filename requests with case-insensitive fallback
+// Serve direct /audio/:filename requests with cached fallback
 app.get('/audio/:filename', (req, res, next) => {
     const rawName = req.params.filename;
     const wordName = path.basename(rawName, path.extname(rawName));
     const filePath = findAudioFileForWord(wordName);
     if (filePath && fs.existsSync(filePath)) {
+        res.set({ 'Cache-Control': 'public, max-age=86400' });
         return res.sendFile(filePath);
     }
     next();
 });
 
-app.use('/audio/uploaded', express.static(uploadedAudioPath));
+app.use('/audio/uploaded', express.static(uploadedAudioPath, { maxAge: '1d' }));
 if (fs.existsSync(externalAudioPath)) {
-    app.use('/audio', express.static(externalAudioPath));
+    app.use('/audio', express.static(externalAudioPath, { maxAge: '1d' }));
 }
 
 // --- MULTER CONFIGS ---
@@ -108,8 +152,8 @@ const audioUpload = multer({
 // All panel routes now require a competition code
 function requireCompetition(req, res, next) {
     const code = req.params.code;
-    if (!code) {
-        return res.status(400).send('Competition code required');
+    if (!code || code.includes('.') || !/^[A-Za-z0-9_-]+$/.test(code)) {
+        return res.status(404).send('Invalid or missing competition code');
     }
     req.competition = competitionManager.getCompetition(code.toUpperCase());
     next();
@@ -202,6 +246,7 @@ app.post('/api/competitions/:code/upload-audio', requireCompetition, audioUpload
     if (!req.file) return res.status(400).json({ success: false, error: 'No audio file uploaded.' });
     const finalPath = `/audio/uploaded/${req.file.filename}`;
     console.log(`[Audio] Competition ${req.competition.code}: Uploaded ${req.file.filename} → ${finalPath}`);
+    refreshAudioCache();
     return res.json({
         success: true,
         filename: req.file.filename,
@@ -221,6 +266,7 @@ app.post('/api/competitions/:code/upload-audio-bulk', requireCompetition, audioU
         word: path.basename(f.filename, path.extname(f.filename))
     }));
     console.log(`[Audio] Competition ${req.competition.code}: Bulk uploaded ${uploaded.length} audio files.`);
+    refreshAudioCache();
     return res.json({ success: true, count: uploaded.length, files: uploaded });
 });
 
@@ -247,9 +293,32 @@ app.delete('/api/competitions/:code/audio-files/:filename', requireCompetition, 
     try {
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
+            refreshAudioCache();
             return res.json({ success: true });
         }
         return res.status(404).json({ success: false, error: 'File not found.' });
+    } catch (e) {
+        return res.status(500).json({ success: false, error: e.message });
+    }
+});
+
+// API: Clear ALL uploaded audio files
+app.post('/api/competitions/:code/clear-uploaded-audio', requireCompetition, (req, res) => {
+    try {
+        const files = fs.readdirSync(uploadedAudioPath);
+        let deleted = 0;
+        for (const f of files) {
+            const ext = path.extname(f).toLowerCase();
+            if (AUDIO_EXTS.includes(ext)) {
+                try {
+                    fs.unlinkSync(path.join(uploadedAudioPath, f));
+                    deleted++;
+                } catch (e) {}
+            }
+        }
+        refreshAudioCache();
+        console.log(`[Audio] Competition ${req.competition.code}: Cleared ${deleted} uploaded audio files.`);
+        return res.json({ success: true, deleted });
     } catch (e) {
         return res.status(500).json({ success: false, error: e.message });
     }
@@ -365,6 +434,18 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Student requests audio replay (after teacher has played it at least once)
+    socket.on('student_request_audio', () => {
+        const comp = getComp();
+        if (!comp) return;
+        if (!comp.state.activeQuestion || !comp.state.activeQuestion.hasAudioPlayed) return;
+        // Send audio_trigger only back to this specific student socket
+        socket.emit('audio_trigger', {
+            word: comp.state.activeQuestion.word,
+            audioFile: comp.state.activeQuestion.audioFile
+        });
+    });
+
     socket.on('teacher_override_result', ({ newResult }) => {
         const comp = getComp();
         if (!comp) return;
@@ -390,13 +471,14 @@ io.on('connection', (socket) => {
                 const s = result.lastResult.isSpellingCorrect ? 'correct' : 'wrong';
                 io.to(`comp_${comp.code}`).emit('play_sound', { sound: s });
             }
-            // Auto-trigger full-screen scoreboard if limit reached
+            // Auto-trigger full-screen scoreboard if limit reached (e.g. 5 questions)
             if (result.scoreboardTriggered) {
-                const currentStudent = comp.state.students.find(s => s.id === comp.state.currentStudentId);
+                console.log(`[Scoreboard] Competition ${comp.code}: Questions limit reached (${comp.state.roundSettings?.questionsPerStudent || 5} questions). Showing scoreboard on student & display panels.`);
                 io.to(`comp_${comp.code}`).emit('show_scoreboard', {
-                    students: currentStudent ? [currentStudent] : [],
+                    students: comp.state.students,
                     currentStudentId: comp.state.currentStudentId,
                     round: comp.state.currentRound,
+                    isScoreboardVisible: true,
                     autoTriggered: true
                 });
                 io.to(`comp_${comp.code}`).emit('play_sound', { sound: 'round_change' });
@@ -409,20 +491,23 @@ io.on('connection', (socket) => {
     socket.on('teacher_dismiss_scoreboard', () => {
         const comp = getComp();
         if (!comp) return;
+        console.log(`[Scoreboard] Competition ${comp.code}: Teacher dismissed scoreboard`);
         comp.dismissScoreboard();
         broadcastState(comp);
+        io.to(`comp_${comp.code}`).emit('hide_scoreboard');
     });
 
     socket.on('teacher_show_scoreboard', () => {
         const comp = getComp();
         if (!comp) return;
+        console.log(`[Scoreboard] Competition ${comp.code}: Teacher broadcast scoreboard to all panels`);
         comp.showScoreboard();
         broadcastState(comp);
-        const currentStudent = comp.state.students.find(s => s.id === comp.state.currentStudentId);
         io.to(`comp_${comp.code}`).emit('show_scoreboard', {
-            students: currentStudent ? [currentStudent] : [],
+            students: comp.state.students,
             currentStudentId: comp.state.currentStudentId,
-            round: comp.state.currentRound
+            round: comp.state.currentRound,
+            isScoreboardVisible: true
         });
     });
 
@@ -433,6 +518,14 @@ io.on('connection', (socket) => {
         const result = comp.setQuestionsPerStudent(count);
         if (result.success) broadcastState(comp);
         else socket.emit('action_error', { message: result.error });
+    });
+
+    socket.on('teacher_toggle_student_typing', ({ enabled }) => {
+        const comp = getComp();
+        if (!comp) return;
+        console.log(`[Action] Competition ${comp.code}: Teacher set studentTypingEnabled: ${enabled}`);
+        comp.setStudentTyping(enabled);
+        broadcastState(comp);
     });
 
     socket.on('teacher_switch_student', ({ studentId }) => {

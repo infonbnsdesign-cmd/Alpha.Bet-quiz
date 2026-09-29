@@ -1,0 +1,235 @@
+{
+  "competitionName": "ALPHA.bet 2026 - Q7WL6P",
+  "competitionCode": "Q7WL6P",
+  "isPaused": false,
+  "isScoreboardVisible": true,
+  "currentRound": "ROUND 1 — SPELL IT",
+  "roundKey": "round_1",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 2,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 2,
+      "questionsCompleted": 5
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790670348668",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Incense",
+      "meaning": "a substance that is burnt to produce a sweet smell",
+      "audioFile": "incense.mp3"
+    },
+    {
+      "id": "q_2_1790670348668",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Impurities",
+      "meaning": "the fact that a substance is dirty or lower in quality because it is mixed with another",
+      "audioFile": "impurities.mp3"
+    },
+    {
+      "id": "q_3_1790670348668",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Omnivores",
+      "meaning": "an animal that is naturally able to eat both plants and meat",
+      "audioFile": "omnivores.mp3"
+    },
+    {
+      "id": "q_4_1790670348668",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Ebony",
+      "meaning": "a very hard dark wood of a tropical tree",
+      "audioFile": "ebony.mp3"
+    },
+    {
+      "id": "q_5_1790670348668",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Parched",
+      "meaning": "very hot and dry, or very thirsty.",
+      "audioFile": "parched.mp3"
+    },
+    {
+      "id": "q_6_1790670348668",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Sawdust",
+      "meaning": "powdery particles of wood produced by sawing",
+      "audioFile": "sawdust.mp3"
+    },
+    {
+      "id": "q_7_1790670348668",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Leguminous",
+      "meaning": "used to refer to a plant that has its seeds in a pod, such as the bean or pea:",
+      "audioFile": "leguminous.mp3"
+    },
+    {
+      "id": "q_8_1790670348668",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Aback",
+      "meaning": "to be very shocked or surprised",
+      "audioFile": "aback.mp3"
+    },
+    {
+      "id": "q_9_1790670348668",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Veins",
+      "meaning": "blood vessel",
+      "audioFile": "veins.mp3"
+    },
+    {
+      "id": "q_10_1790670348668",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Glacier",
+      "meaning": "a large mass of ice that moves slowly",
+      "audioFile": "glacier.mp3"
+    },
+    {
+      "id": "q_11_1790670348668",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Unhealed",
+      "meaning": "not yet healed.",
+      "audioFile": "unhealed.mp3"
+    },
+    {
+      "id": "q_12_1790670348668",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Venomous",
+      "meaning": "poisonous",
+      "audioFile": "venomous.mp3"
+    },
+    {
+      "id": "q_13_1790670348668",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Accurate",
+      "meaning": "correct, exact, and without any mistakes",
+      "audioFile": "accurate.mp3"
+    },
+    {
+      "id": "q_14_1790670348668",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Violence",
+      "meaning": "actions or words that are intended to hurt people",
+      "audioFile": "violence.mp3"
+    },
+    {
+      "id": "q_15_1790670348668",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Elapsed",
+      "meaning": "it goes past",
+      "audioFile": "elapsed.mp3"
+    },
+    {
+      "id": "q_16_1790670348668",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Bandage",
+      "meaning": "a strip of woven material used to bind up a wound",
+      "audioFile": "bandage.mp3"
+    },
+    {
+      "id": "q_17_1790670348668",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Relic",
+      "meaning": "an object from the past,",
+      "audioFile": "relic.mp3"
+    },
+    {
+      "id": "q_18_1790670348668",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Harness",
+      "meaning": "a piece of equipment with straps and belts, used to control or hold",
+      "audioFile": "harness.mp3"
+    },
+    {
+      "id": "q_19_1790670348668",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Canopies",
+      "meaning": "the uppermost branches of the trees in a forest,",
+      "audioFile": "canopies.mp3"
+    },
+    {
+      "id": "q_20_1790670348668",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Utter",
+      "meaning": "to say something or to make a sound with your voice",
+      "audioFile": "utter.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "available",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "available",
+    "7": "used",
+    "8": "used",
+    "9": "available",
+    "10": "used",
+    "11": "available",
+    "12": "available",
+    "13": "available",
+    "14": "available",
+    "15": "used",
+    "16": "used",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [
+    "leguminous",
+    "glacier",
+    "elapsed",
+    "bandage",
+    "aback"
+  ],
+  "activeQuestion": null,
+  "lastResult": {
+    "boxNo": 8,
+    "boxLabel": "08",
+    "word": "Aback",
+    "studentAnswer": "Glacier",
+    "isSpellingCorrect": false,
+    "meaningCorrect": false,
+    "points": 0,
+    "studentName": "Student 1",
+    "timestamp": 1790670485057
+  },
+  "roundSettings": {
+    "questionsPerStudent": 5
+  }
+}

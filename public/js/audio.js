@@ -1,5 +1,6 @@
 /* ============================================================
    ALPHA.BET 2026 COMPETITION - AUDIO & PRONUNCIATION ENGINE
+   With Android audio unlock, preloading, and caching
    ============================================================ */
 
 class SoundEngine {
@@ -7,7 +8,16 @@ class SoundEngine {
         this.audioCtx = null;
         this.synth = window.speechSynthesis;
         this.preferredVoice = null;
+        this.audioUnlocked = false;
+        this.preloadedAudio = null;     // Preloaded Audio element for current word
+        this.preloadedWord = null;      // Which word is preloaded
         this.initVoice();
+
+        // Auto-unlock audio on ANY user interaction (critical for Android)
+        this._unlockHandler = () => this.unlockAudio();
+        document.addEventListener('click', this._unlockHandler, { once: false });
+        document.addEventListener('touchstart', this._unlockHandler, { once: false });
+        document.addEventListener('touchend', this._unlockHandler, { once: false });
     }
 
     initAudioContext() {
@@ -19,6 +29,45 @@ class SoundEngine {
         }
         if (this.audioCtx && this.audioCtx.state === 'suspended') {
             this.audioCtx.resume();
+        }
+    }
+
+    // Unlock audio for Android/iOS — must be called during a user gesture
+    unlockAudio() {
+        if (this.audioUnlocked) return;
+
+        try {
+            // 1. Resume AudioContext
+            this.initAudioContext();
+
+            // 2. Play a tiny silent sound to unlock HTML5 Audio on Android
+            const silentAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+            silentAudio.volume = 0.01;
+            const playPromise = silentAudio.play();
+            if (playPromise) {
+                playPromise.then(() => {
+                    silentAudio.pause();
+                    silentAudio.currentTime = 0;
+                    this.audioUnlocked = true;
+                    console.log('[Audio] Android audio unlocked via user gesture');
+                }).catch(() => {
+                    // Still blocked, will try again on next gesture
+                });
+            }
+
+            // 3. Also create a silent oscillator to fully unlock Web Audio API
+            if (this.audioCtx && this.audioCtx.state === 'running') {
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                gain.gain.value = 0;
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                osc.start();
+                osc.stop(this.audioCtx.currentTime + 0.001);
+                this.audioUnlocked = true;
+            }
+        } catch (e) {
+            console.warn('[Audio] Unlock attempt failed:', e);
         }
     }
 
@@ -35,6 +84,31 @@ class SoundEngine {
         if (this.synth.onvoiceschanged !== undefined) {
             this.synth.onvoiceschanged = setVoice;
         }
+    }
+
+    // Preload audio for a word so it plays instantly when triggered
+    preloadAudio(word) {
+        if (!word) return;
+        const cleanWord = word.trim();
+        if (this.preloadedWord === cleanWord && this.preloadedAudio) return; // Already preloaded
+
+        // Clean up previous preloaded audio
+        if (this.preloadedAudio) {
+            this.preloadedAudio.pause();
+            this.preloadedAudio.removeAttribute('src');
+            this.preloadedAudio.load();
+        }
+
+        const audioUrl = `/api/audio-lookup/${encodeURIComponent(cleanWord)}`;
+        const audio = new Audio();
+        audio.preload = 'auto';
+        audio.src = audioUrl;
+        // Start loading immediately
+        audio.load();
+
+        this.preloadedAudio = audio;
+        this.preloadedWord = cleanWord;
+        console.log(`[Audio] Preloading audio for: ${cleanWord}`);
     }
 
     // Play synthetic sound effect
@@ -122,14 +196,24 @@ class SoundEngine {
         }
     }
 
-    // Pronounce Word: checks local /audio/ folder, fallback to Web Speech
+    // Pronounce Word: uses preloaded audio if available, otherwise fetches fresh
     speakWord(word, onStart, onEnd) {
         if (!word) return;
         const cleanWord = word.trim();
 
-        // 1. Try server case-insensitive audio endpoint (matches Apple.mp3, apple.mp3, etc.)
-        const audioUrl = `/api/audio-lookup/${encodeURIComponent(cleanWord)}`;
-        const audio = new Audio(audioUrl);
+        let audio;
+
+        // Use preloaded audio if it matches the word
+        if (this.preloadedWord === cleanWord && this.preloadedAudio) {
+            audio = this.preloadedAudio;
+            audio.currentTime = 0; // Reset to start in case it was played before
+            console.log(`[Audio] Using preloaded audio for: ${cleanWord}`);
+        } else {
+            // Fetch fresh if not preloaded
+            const audioUrl = `/api/audio-lookup/${encodeURIComponent(cleanWord)}`;
+            audio = new Audio(audioUrl);
+            audio.preload = 'auto';
+        }
 
         let hasStarted = false;
 

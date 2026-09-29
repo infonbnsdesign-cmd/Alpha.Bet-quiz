@@ -15,23 +15,23 @@
     <!-- Header Navigation -->
     <header class="app-header">
         <a href="/" class="app-brand">
-            <img src="logo.png" alt="Alpha.bet Logo" class="app-logo">
+            <img src="/logo.png" alt="Alpha.bet Logo" class="app-logo">
             <div class="app-title">ALPHA<span>.BET</span></div>
         </a>
 
         <div class="header-status">
-            <button id="openScoreboardBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+            <button id="openScoreboardBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 700;">
                 🏆 Scoreboard
             </button>
-            <button id="openStudentExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+            <button id="openStudentExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 700;">
                 👥 Student List
             </button>
-            <button id="openExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+            <button id="openExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 700;">
                 📁 Word Bank
             </button>
             <div class="role-badge control">
                 <span class="status-dot"></span>
-                TEACHER / JUDGE CONTROL PANEL
+                TEACHER / JUDGE CONTROL
             </div>
             <div id="competitionCodeBadge" class="role-badge" style="background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;">
                 Code: <span id="compCodeDisplay">—</span>
@@ -39,243 +39,404 @@
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="control-container">
-        <!-- Control Top Bar -->
-        <div class="control-top-bar">
-            <!-- Current Student Card -->
-            <div class="student-card">
-                <div class="student-info">
-                    <span class="student-tag">Current Student</span>
-                    <div class="student-name-display text-neon-cyan" id="currentStudentName">Student 1</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;" id="studentQuestionsCount">0 / 5 Questions</div>
+    <!-- Main 3-Column Split Viewport -->
+    <main class="control-3col-layout">
+
+        <!-- ==============================================
+             LEFT PANEL: Participant & Session Controls
+             ============================================== -->
+        <aside class="control-col control-col-left">
+
+            <!-- Card 1: Active Participant -->
+            <div class="control-panel-card student-panel-card">
+                <div class="panel-card-header">
+                    <span class="panel-card-tag"><span class="pulse-indicator"></span> CURRENT PARTICIPANT</span>
+                    <span class="student-counter-badge" id="studentQuestionsCount">0 / 5 Questions</span>
+                </div>
+                
+                <div class="student-profile-row">
+                    <div class="student-name-box">
+                        <div class="student-name-display text-neon-cyan" id="currentStudentName">Student 1</div>
+                    </div>
+                    <div class="student-score-box">
+                        <span class="score-mini-label">Score</span>
+                        <span class="student-score-value" id="studentScore">0</span>
+                    </div>
                 </div>
 
-                <div class="student-actions">
-                    <div style="text-align: right; margin-right: 0.5rem;">
-                        <span class="student-tag" style="display: block; margin-bottom: 2px;">Score</span>
-                        <span style="font-size: 2.2rem; font-weight: 900; font-family: var(--font-mono); color: var(--primary-cyan);" id="studentScore">0</span>
-                    </div>
-                    <select id="studentSelectDropdown" class="btn btn-secondary" style="background: rgba(15,23,42,0.9); font-weight: 700; padding: 0.6rem 1rem; outline: none; border: 1px solid var(--border-accent);">
+                <div class="student-switch-section">
+                    <label class="section-micro-label">SWITCH PARTICIPANT</label>
+                    <select id="studentSelectDropdown" class="form-select-dark">
                         <!-- Options generated dynamically -->
                     </select>
-                    <button id="addStudentBtn" class="btn btn-secondary" title="Add Single Student" style="padding: 0.6rem 0.9rem;">
+                </div>
+
+                <div class="student-btn-group">
+                    <button id="addStudentBtn" class="btn btn-secondary" title="Add Single Student" style="padding: 0.55rem 0.6rem; font-size: 0.8rem; font-weight: 700;">
                         + New
                     </button>
-                    <button id="importStudentsExcelBtn" class="btn btn-secondary" title="Upload Student List from Excel (.xlsx / .xls / .csv)" style="padding: 0.6rem 0.9rem; border-color: var(--primary-cyan); color: var(--primary-cyan);">
+                    <button id="importStudentsExcelBtn" class="btn btn-secondary btn-cyan" title="Upload Student List from Excel (.xlsx / .xls / .csv)" style="padding: 0.55rem 0.6rem; font-size: 0.8rem; font-weight: 700;">
                         📁 Excel
                     </button>
                 </div>
             </div>
 
-            <!-- Active Round Card -->
-            <div class="round-card">
-                <span class="round-tag">Active Round</span>
+            <!-- Card 2: Active Round Selection -->
+            <div class="control-panel-card round-panel-card">
+                <div class="panel-card-header">
+                    <span class="panel-card-tag tag-gold">ACTIVE ROUND</span>
+                    <span class="round-status-pill">OFFICIAL</span>
+                </div>
+
                 <div class="round-title-display" id="currentRoundTitle">ROUND 1 — SPELL IT</div>
-            </div>
 
-            <!-- Quick Controls -->
-            <div class="control-quick-actions">
-                <button id="pauseBtn" class="btn btn-secondary">
-                    ⏸ PAUSE
-                </button>
-            </div>
-        </div>
-
-        <!-- MAIN STAGE / EVALUATION INTERFACE -->
-        <div class="stage-card">
-            <!-- STATE A: WAITING FOR STUDENT TO SELECT QUESTION -->
-            <div class="waiting-box" id="waitingStage">
-                <div class="radar-spinner"></div>
-                <h2 class="waiting-title">Waiting for Student Selection</h2>
-                <p class="waiting-desc">
-                    The student must be the only person who selects a question from the 20-question grid. As soon as the student selects a question on the Student Panel, it will immediately appear here.
-                </p>
-                <div class="authority-pill">
-                    🔒 Sole Selection Authority: Student / Preview Panel
+                <div class="round-buttons-stack">
+                    <button id="btnRound1" class="btn btn-primary">
+                        <span class="btn-round-num">01</span>
+                        <span>Round 1: Spell It</span>
+                    </button>
+                    <button id="btnRound2" class="btn btn-secondary">
+                        <span class="btn-round-num">02</span>
+                        <span>Round 2: Spell & Meaning</span>
+                    </button>
+                    <button id="btnTieBreaker" class="btn btn-secondary">
+                        <span class="btn-round-num">⚡</span>
+                        <span>Tie-Breaker</span>
+                    </button>
+                    <button id="endTieBreakerBtn" class="btn btn-danger" style="display: none; width: 100%; font-size: 0.85rem; font-weight: 800; padding: 0.6rem;">
+                        ✕ END TIE-BREAKER
+                    </button>
                 </div>
             </div>
 
-            <!-- STATE B: STUDENT SELECTED A QUESTION (EVALUATION MODE) -->
-            <div class="evaluation-view" id="evaluationStage" style="display: none;">
+            <!-- Card 3: Match Session Actions -->
+            <div class="control-panel-card actions-panel-card">
+                <div class="panel-card-header">
+                    <span class="panel-card-tag">SESSION ACTIONS</span>
+                </div>
+                <div class="session-actions-grid">
+                    <button id="pauseBtn" class="btn btn-secondary">
+                        ⏸ PAUSE
+                    </button>
+                    <button id="resetGridBtn" class="btn btn-secondary">
+                        🎲 Reset 20-Grid
+                    </button>
+                </div>
+                <div class="session-brand-note">
+                    ALPHA.BET 2026 OFFICIAL CONTROL
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ==============================================
+             CENTER PANEL: Hero QUESTION ACTIVE Stage
+             ============================================== -->
+        <section class="control-col control-col-center">
+            <div class="stage-card">
+
                 <!-- Header of Selected Question -->
-                <div class="eval-header-row">
+                <div class="center-stage-header">
                     <div class="student-selected-banner">
-                        <div class="selected-box-pill" id="selectedBoxPill">BOX 07</div>
-                        <div class="selected-box-label" id="selectedBoxLabel">STUDENT SELECTED: QUESTION 07</div>
+                        <div class="selected-box-pill" id="selectedBoxPill">BOX --</div>
+                        <div class="selected-box-label" id="selectedBoxLabel">STUDENT SELECTION</div>
                     </div>
                     <div class="status-badge-active" id="activeStatusBadge">
                         QUESTION ACTIVE
                     </div>
                 </div>
 
-                <!-- Word and Definition Card -->
-                <div class="word-meaning-card">
-                    <div class="correct-word-section">
-                        <span class="eval-label">Correct Word</span>
-                        <div class="correct-word-text" id="correctWordDisplay">beautiful</div>
+                <!-- STATE A: WAITING FOR STUDENT TO SELECT QUESTION -->
+                <div class="waiting-box" id="waitingStage">
+                    <div class="radar-container">
+                        <div class="radar-spinner"></div>
+                        <div class="radar-core-dot"></div>
                     </div>
-                    <div class="word-meaning-section">
-                        <span class="eval-label">Word Meaning</span>
-                        <div class="meaning-text" id="wordMeaningDisplay">"pleasing to the senses"</div>
-                    </div>
-                </div>
-
-                <!-- Audio Action Bar -->
-                <div class="audio-action-bar">
-                    <button id="playWordBtn" class="btn btn-primary audio-btn-main">
-                        ▶ PLAY WORD
-                    </button>
-                    <button id="replayWordBtn" class="btn btn-secondary audio-btn-main">
-                        🔁 PLAY AGAIN
-                    </button>
-                    <div class="role-badge" id="audioStatePill" style="margin-left: auto;">
-                        Audio Ready
+                    <h2 class="waiting-title">Waiting for Student Selection</h2>
+                    <p class="waiting-desc">
+                        The student has exclusive authority to select a question on their panel. As soon as the student taps a box, it will immediately lock and appear here in real time.
+                    </p>
+                    <div class="authority-pill">
+                        🔒 Selection Authority: Student Panel
                     </div>
                 </div>
 
-                <!-- Live Answers and Automatic Check Grid -->
-                <div class="answers-grid">
-                    <!-- Student Submitted Answer -->
-                    <div class="student-answer-panel">
-                        <span class="eval-label">Student Answer</span>
-                        <div class="student-answer-value" id="studentAnswerDisplay">
-                            <span class="waiting-student-type">Student listening / typing spelling...</span>
+                <!-- STATE B: STUDENT SELECTED A QUESTION (EVALUATION MODE) -->
+                <div class="evaluation-view" id="evaluationStage" style="display: none;">
+                    
+                    <!-- Word and Definition Showcase Card -->
+                    <div class="word-meaning-card">
+                        <div class="correct-word-section">
+                            <span class="eval-label">Correct Word</span>
+                            <div class="correct-word-text" id="correctWordDisplay">beautiful</div>
+                        </div>
+                        <div class="word-meaning-section">
+                            <span class="eval-label">Word Meaning</span>
+                            <div class="meaning-text" id="wordMeaningDisplay">"pleasing to the senses"</div>
                         </div>
                     </div>
 
-                    <!-- Automatic Check & Override -->
-                    <div class="auto-check-panel">
-                        <div>
-                            <span class="eval-label">Automatic Spelling Check</span>
-                            <div class="check-verdict-badge" id="autoCheckBadge">
-                                Waiting for submit...
+                    <!-- Audio Action Bar -->
+                    <div class="audio-action-bar">
+                        <div class="audio-buttons-row">
+                            <button id="playWordBtn" class="btn btn-primary audio-btn-main">
+                                ▶ PLAY WORD
+                            </button>
+                            <button id="replayWordBtn" class="btn btn-secondary audio-btn-main">
+                                🔁 PLAY AGAIN
+                            </button>
+                        </div>
+                        <div class="role-badge" id="audioStatePill" style="margin-left: auto;">
+                            Audio Ready
+                        </div>
+                    </div>
+
+                    <!-- Live Answers and Automatic Check Grid -->
+                    <div class="answers-grid">
+                        <!-- Student Submitted Answer -->
+                        <div class="student-answer-panel">
+                            <div class="answer-panel-header">
+                                <span class="eval-label">Student Answer</span>
+                                <span class="live-pill"><span class="live-dot"></span> LIVE</span>
+                            </div>
+                            <div class="student-answer-value" id="studentAnswerDisplay">
+                                <span class="waiting-student-type">Student listening / typing spelling...</span>
                             </div>
                         </div>
 
-                        <div class="check-actions">
-                            <button id="acceptResultBtn" class="btn btn-success" style="flex: 1;" disabled>
-                                ✓ ACCEPT
+                        <!-- Spelling Evaluation: Manual & Auto -->
+                        <div class="auto-check-panel">
+                            <div>
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span class="eval-label">Spelling Evaluation</span>
+                                    <span id="evalModeBadge" style="font-size: 0.68rem; font-weight: 800; color: #94a3b8; font-family: var(--font-mono); text-transform: uppercase;">Oral / Manual</span>
+                                </div>
+                                <div class="check-verdict-badge" id="autoCheckBadge">
+                                    Waiting for submit...
+                                </div>
+                            </div>
+
+                            <!-- Manual Right / Wrong Grading Controls (Works for ALL rounds) -->
+                            <div class="check-actions">
+                                <button id="manualCorrectBtn" class="btn btn-success" style="flex: 1; padding: 0.8rem 0.6rem; font-size: 0.9rem; font-weight: 900; letter-spacing: 0.05em;">
+                                    ✓ RIGHT (+1)
+                                </button>
+                                <button id="manualWrongBtn" class="btn btn-danger" style="flex: 1; padding: 0.8rem 0.6rem; font-size: 0.9rem; font-weight: 900; letter-spacing: 0.05em;">
+                                    ✕ WRONG (+0)
+                                </button>
+                            </div>
+                            <!-- Existing auto-check buttons kept for backward compatibility -->
+                            <div style="display: none;">
+                                <button id="acceptResultBtn"></button>
+                                <button id="overrideResultBtn"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Round 2 Oral Meaning Evaluation (Only shown during Round 2) -->
+                    <div class="round-2-meaning-eval" id="round2MeaningSection" style="display: none;">
+                        <div class="meaning-eval-info">
+                            <span class="eval-label" style="color: var(--accent-gold);">Round 2 — Meaning Check</span>
+                            <div class="meaning-eval-subtext">
+                                Student says meaning aloud (student does NOT type meaning)
+                            </div>
+                        </div>
+
+                        <div class="meaning-eval-buttons">
+                            <button id="meaningCorrectBtn" class="btn btn-secondary btn-correct-meaning">
+                                ✓ Meaning Correct (+1)
                             </button>
-                            <button id="overrideResultBtn" class="btn btn-warning" style="flex: 1;" disabled>
-                                ⇄ OVERRIDE
+                            <button id="meaningIncorrectBtn" class="btn btn-secondary btn-wrong-meaning">
+                                ✕ Meaning Wrong (+0)
                             </button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Round 2 Oral Meaning Evaluation (Only shown during Round 2) -->
-                <div class="round-2-meaning-eval" id="round2MeaningSection" style="display: none;">
-                    <div>
-                        <span class="eval-label" style="color: var(--accent-gold);">Round 2 — Meaning Check</span>
-                        <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-top: 0.3rem;">
-                            Student says meaning aloud (student does NOT type meaning)
+                    <!-- Final Action: Confirm and Record Result -->
+                    <div class="confirm-action-card">
+                        <div class="confirm-text-group">
+                            <div class="confirm-title">Final Evaluation Decision</div>
+                            <div class="confirm-subtitle">Confirm score and mark this question as permanently USED.</div>
                         </div>
-                    </div>
-
-                    <div class="meaning-eval-buttons">
-                        <button id="meaningCorrectBtn" class="btn btn-secondary">
-                            ✓ Meaning Correct (+1)
-                        </button>
-                        <button id="meaningIncorrectBtn" class="btn btn-secondary">
-                            ✕ Meaning Wrong (+0)
+                        <button id="confirmQuestionBtn" class="btn btn-success confirm-btn-large" disabled>
+                            CONFIRM & RECORD SCORE ➔
                         </button>
                     </div>
+
                 </div>
 
-                <!-- Final Action: Confirm and Record Result -->
-                <div class="confirm-action-card">
-                    <div>
-                        <div style="font-size: 1.25rem; font-weight: 900; color: #ffffff;">Final Evaluation Decision</div>
-                        <div style="font-size: 0.9rem; color: #94a3b8;">Confirm score and mark this question as permanently USED.</div>
-                    </div>
-                    <button id="confirmQuestionBtn" class="btn btn-success" style="padding: 1.1rem 2.5rem; font-size: 1.1rem; font-weight: 900;" disabled>
-                        CONFIRM & RECORD SCORE ➔
-                    </button>
-                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Competition & Round Controls -->
-        <div class="control-bottom-tools">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <span class="eval-label" style="margin-right: 0.5rem;">Rounds:</span>
-                <button id="btnRound1" class="btn btn-primary">Round 1: Spell It</button>
-                <button id="btnRound2" class="btn btn-secondary">Round 2: Spell & Meaning</button>
-                <button id="btnTieBreaker" class="btn btn-secondary">Tie-Breaker</button>
-                <button id="endTieBreakerBtn" class="btn btn-danger" style="display: none;">END TIE-BREAKER</button>
-            </div>
+        <!-- ==============================================
+             RIGHT PANEL: Live Leaderboard, Settings & Tools
+             ============================================== -->
+        <aside class="control-col control-col-right">
 
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button id="resetGridBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 700;">
-                    🎲 Reset Grid (20 Fresh Words)
-                </button>
-                <span style="font-size: 0.8rem; color: #64748b; font-weight: 700;">ALPHA.BET 2026 OFFICIAL</span>
-            </div>
-        </div>
-
-        <!-- Live Leaderboard Panel -->
-        <div class="control-bottom-tools" style="margin-top: 1.5rem;">
-            <div class="leaderboard-panel">
-                <div class="leaderboard-header-row">
-                    <span class="eval-label">🏆 LIVE LEADERBOARD</span>
-                    <button id="toggleLeaderboardBtn" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.7rem;">
+            <!-- Card 1: Live Leaderboard -->
+            <div class="control-panel-card leaderboard-panel-card">
+                <div class="panel-card-header">
+                    <span class="panel-card-tag tag-cyan">🏆 LIVE LEADERBOARD</span>
+                    <button id="toggleLeaderboardBtn" class="btn-micro-toggle">
                         ▼ Collapse
                     </button>
                 </div>
-                <div id="controlLeaderboardList" class="leaderboard-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div id="controlLeaderboardList" class="leaderboard-list">
                     <!-- Populated dynamically -->
                 </div>
             </div>
-        </div>
 
-        <!-- Settings & Tools Panel -->
-        <div class="control-bottom-tools" style="margin-top: 1.5rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
-                
-                <!-- Questions Per Student Setting -->
-                <div class="settings-card">
-                    <div class="settings-label">Questions Per Student</div>
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <input 
-                            type="number" 
-                            id="questionsPerStudentInput" 
-                            class="text-input-field" 
-                            min="1" 
-                            max="20" 
-                            value="5" 
-                            style="width: 80px; text-align: center; font-size: 1.2rem; font-weight: 900; font-family: var(--font-mono);"
-                        />
-                        <button id="setQuestionsPerStudentBtn" class="btn btn-primary" style="flex: 1;">Apply</button>
-                    </div>
-                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">After this many questions, scoreboard auto-displays full screen</div>
+            <!-- Card 2: Upload Category (Collapsible Accordion) -->
+            <div class="control-panel-card upload-category-card accordion-card" id="uploadCenterCard">
+                <div class="panel-card-header accordion-header" id="uploadCenterToggle" role="button" tabindex="0" aria-expanded="false">
+                    <span class="panel-card-tag tag-cyan">📤 UPLOAD CATEGORY</span>
+                    <span class="accordion-chevron" id="uploadCenterChevron">▶</span>
                 </div>
 
-                <!-- Audio Upload -->
-                <div class="settings-card">
-                    <div class="settings-label">Upload Audio Files</div>
-                    <input type="file" id="audioFileInput" accept="audio/*" multiple style="margin-bottom: 0.75rem; color: #fff;" />
-                    <button id="uploadAudioBtn" class="btn btn-secondary" style="width: 100%;">Upload Audio(s)</button>
-                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">MP3, WAV, OGG, M4A, AAC — max 20MB each</div>
+                <div class="accordion-body" id="uploadCenterBody" style="display: none;">
+                    <div class="upload-selector-wrapper">
+                        <label class="section-micro-label" for="uploadCategorySelect">Select Upload Type</label>
+                        <select id="uploadCategorySelect" class="form-select-dark" style="width: 100%; font-weight: 700; border-color: rgba(0, 240, 255, 0.4);">
+                            <option value="words" selected>1. Word Upload (Question Bank)</option>
+                            <option value="audio">2. Audio Upload (Audio Files)</option>
+                            <option value="students">3. Student Name List (Participants)</option>
+                        </select>
+                    </div>
+
+                    <!-- 1. Word Upload Subpanel -->
+                    <div id="uploadPanelWords" class="upload-subpanel">
+                        <div class="section-micro-label" style="margin-bottom: 0.3rem;">Excel File (.xlsx, .xls)</div>
+                        <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="custom-file-input" style="margin-bottom: 0.5rem;" />
+                        <button id="uploadExcelBtn" class="btn btn-primary" style="width: 100%; padding: 0.55rem; font-size: 0.82rem; font-weight: 800;">
+                            📤 Upload &amp; Refresh Grid
+                        </button>
+                        <div class="micro-helper-text" style="margin-top: 0.35rem;">
+                            Excel columns: <b>"Words"</b> and <b>"Meanings"</b>.
+                        </div>
+                    </div>
+
+                    <!-- 2. Audio Upload Subpanel -->
+                    <div id="uploadPanelAudio" class="upload-subpanel" style="display: none;">
+                        <div class="section-micro-label" style="margin-bottom: 0.3rem;">Audio Files (.mp3, .wav, .ogg, .m4a)</div>
+                        <input type="file" id="audioFileInput" accept="audio/*" multiple class="custom-file-input" style="margin-bottom: 0.5rem;" />
+                        <button id="uploadAudioBtn" class="btn btn-secondary" style="width: 100%; padding: 0.55rem; font-size: 0.82rem; font-weight: 800;">
+                            📤 Upload Audio(s)
+                        </button>
+                        <div class="micro-helper-text" style="margin-top: 0.35rem;">
+                            Supports MP3, WAV, OGG, M4A, AAC — max 20MB per batch.
+                        </div>
+                    </div>
+
+                    <!-- 3. Student Name List Subpanel -->
+                    <div id="uploadPanelStudents" class="upload-subpanel" style="display: none;">
+                        <div class="section-micro-label" style="margin-bottom: 0.3rem;">Participant List (.xlsx, .xls, .csv)</div>
+                        <input type="file" id="studentsExcelFileInput" accept=".xlsx, .xls, .csv" class="custom-file-input" style="margin-bottom: 0.5rem;" />
+                        
+                        <div style="background: rgba(0, 0, 0, 0.25); padding: 0.45rem 0.6rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.55rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: #cbd5e1; cursor: pointer;">
+                                <input type="radio" name="studentImportMode" value="append" checked style="accent-color: var(--primary-cyan);" />
+                                <span><b>Add to existing</b> (preserve scores)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: #cbd5e1; cursor: pointer;">
+                                <input type="radio" name="studentImportMode" value="replace" style="accent-color: var(--primary-cyan);" />
+                                <span><b>Replace entire list</b></span>
+                            </label>
+                        </div>
+
+                        <button id="uploadStudentsExcelSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.55rem; font-size: 0.82rem; font-weight: 800;">
+                            👥 Import Students
+                        </button>
+                        <div class="micro-helper-text" style="margin-top: 0.35rem;">
+                            Column header: <b>"Name"</b>, <b>"Student Name"</b>, or 1-column list.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Card 3: Settings (Collapsible Accordion) -->
+            <div class="control-panel-card settings-panel-card accordion-card" id="settingsCard">
+                <div class="panel-card-header accordion-header" id="settingsCardToggle" role="button" tabindex="0" aria-expanded="false">
+                    <span class="panel-card-tag">⚙️ SETTINGS</span>
+                    <span class="accordion-chevron" id="settingsCardChevron">▶</span>
                 </div>
 
-                <!-- Competition Reset & Clear Words -->
-                <div class="settings-card danger-zone">
-                    <div class="settings-label danger-label">Danger Zone</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-                        <button id="clearWordsDangerBtn" class="btn btn-warning" style="width: 100%; padding: 0.8rem; font-weight: 800;">
-                            🗑️ CLEAR ALL WORDS
-                        </button>
-                        <button id="resetCompetitionBtn" class="btn btn-danger" style="width: 100%; padding: 0.8rem; font-weight: 800;">
-                            🔄 RESET COMPETITION
-                        </button>
+                <div class="accordion-body" id="settingsCardBody" style="display: none;">
+
+                    <!-- 1. Round Settings -->
+                    <div class="settings-sub-section">
+                        <div class="settings-sub-title">1. ROUND SETTINGS</div>
+                        <div class="settings-sub-body" id="settingsSubRound">
+                            <div class="qps-setting-row" style="margin-top: 0.5rem;">
+                                <div class="qps-label-group">
+                                    <span class="section-micro-label">Questions Per Student</span>
+                                    <span class="micro-helper-text">Auto-shows scoreboard</span>
+                                </div>
+                                <div class="qps-input-group">
+                                    <input 
+                                        type="number" 
+                                        id="questionsPerStudentInput" 
+                                        class="text-input-field qps-number-input" 
+                                        min="1" 
+                                        max="20" 
+                                        value="5" 
+                                    />
+                                    <button id="setQuestionsPerStudentBtn" class="btn btn-primary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem; font-weight: 800;">Apply</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">Clears database words, scores, or competition state</div>
+
+                    <!-- 2. Student Typing Mode -->
+                    <div class="settings-sub-section">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div class="settings-sub-title" style="margin-bottom: 0;">2. STUDENT TYPING</div>
+                            <span id="typingModeStatusBadge" class="mode-status-pill typing-on">⌨️ TYPING ON</span>
+                        </div>
+                        <div class="settings-sub-body" id="settingsSubTyping">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                                <button id="enableTypingBtn" class="btn btn-primary" style="padding: 0.55rem 0.4rem; font-weight: 800; font-size: 0.78rem;">
+                                    ⌨️ Typing ON
+                                </button>
+                                <button id="disableTypingBtn" class="btn btn-secondary" style="padding: 0.55rem 0.4rem; font-weight: 800; font-size: 0.78rem;">
+                                    🎤 Oral (No Typing)
+                                </button>
+                            </div>
+                            <div class="micro-helper-text" style="margin-top: 0.4rem;">
+                                If Oral / No Typing, student speaks out loud & teacher grades Right/Wrong manually.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Danger Zone -->
+                    <div class="settings-sub-section settings-danger-sub-section">
+                        <div class="settings-sub-title tag-danger-text">3. ⚠️ DANGER ZONE</div>
+                        <div class="settings-sub-body" id="settingsSubDanger">
+                            <div class="danger-zone-buttons" style="margin-top: 0.5rem;">
+                                <button id="clearWordsDangerBtn" class="btn btn-warning btn-danger-action">
+                                    🗑️ CLEAR ALL WORDS
+                                </button>
+                                <button id="clearUploadedAudioBtn" class="btn btn-warning btn-danger-action">
+                                    🔊 CLEAR ALL UPLOADED AUDIO
+                                </button>
+                                <button id="resetCompetitionBtn" class="btn btn-danger btn-danger-action">
+                                    🔄 RESET COMPETITION
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
-        </div>
+
+        </aside>
+
     </main>
+
+    <!-- ==============================================
+         MODALS & OVERLAYS (Preserved for Dialog Logic)
+         ============================================== -->
 
     <!-- Modal: Add Student -->
     <div class="modal-overlay" id="addStudentModal">
@@ -290,59 +451,8 @@
         </div>
     </div>
 
-    <!-- Modal: Upload Student List from Excel -->
-    <div class="modal-overlay" id="uploadStudentsModal">
-        <div class="modal-card" style="max-width: 560px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-                <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff;">👥 Upload Student List</h2>
-                <button id="closeStudentsModalBtn" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;">✕</button>
-            </div>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.25rem;">
-                Select an Excel file (<code style="color: var(--primary-cyan);">.xlsx, .xls</code>) or CSV containing participant names.
-            </p>
-
-            <div style="background: rgba(0, 240, 255, 0.04); border: 1.5px dashed var(--border-glow); border-radius: 16px; padding: 1.25rem; text-align: center; margin-bottom: 1.25rem;">
-                <input type="file" id="studentsExcelFileInput" accept=".xlsx, .xls, .csv" style="margin-bottom: 0.75rem; color: #ffffff; width: 100%;" />
-                <div style="font-size: 0.8rem; color: #64748b;">
-                    Column header can be: <b>"Name"</b>, <b>"Student Name"</b>, <b>"Participant"</b>, or any 1-column list.
-                </div>
-            </div>
-
-            <div style="margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; background: rgba(255, 255, 255, 0.03); padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid var(--border-subtle);">
-                <label style="display: flex; align-items: center; gap: 0.6rem; color: #e2e8f0; font-size: 0.88rem; cursor: pointer;">
-                    <input type="radio" name="studentImportMode" value="append" checked style="accent-color: var(--primary-cyan);" />
-                    <span><b>Add to existing students</b> (preserves current scores)</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 0.6rem; color: #e2e8f0; font-size: 0.88rem; cursor: pointer;">
-                    <input type="radio" name="studentImportMode" value="replace" style="accent-color: var(--primary-cyan);" />
-                    <span><b>Replace entire student list</b> with new file</span>
-                </label>
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-                <button id="cancelStudentsExcelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
-                <button id="uploadStudentsExcelSubmitBtn" class="btn btn-primary" style="flex: 1.5;">Import Students</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Upload Word Bank -->
-    <div class="modal-overlay" id="uploadExcelModal">
-        <div class="modal-card">
-            <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff; margin-bottom: 0.5rem;">Upload Question Bank</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Select an Excel file (.xlsx, .xls) containing "Words" and "Meanings" columns.</p>
-            <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="margin-bottom: 1.5rem; color: #ffffff;" />
-            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                <button id="cancelExcelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
-                <button id="uploadExcelBtn" class="btn btn-primary" style="flex: 1.5;">Upload & Refresh Grid</button>
-            </div>
-            <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem; text-align: center;">
-                <button id="clearAllWordsBtn" class="btn btn-danger" style="width: 100%; padding: 0.75rem; font-size: 0.85rem;">
-                    🗑️ Clear All Words from Database
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- NOTE: Upload panels are now embedded in the Upload Category card (right column).
+         The uploadStudentsModal and uploadExcelModal have been removed. -->
 
     <!-- Modal: Clear Words Confirmation -->
     <div class="modal-overlay" id="clearWordsConfirmModal">
@@ -391,6 +501,21 @@
             <div style="display: flex; gap: 1rem;">
                 <button id="cancelResetBtn" class="btn btn-secondary" style="flex: 1; padding: 0.85rem;">Cancel</button>
                 <button id="confirmResetBtn" class="btn btn-danger" style="flex: 1; padding: 0.85rem; font-weight: 900;">Yes, Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Clear Uploaded Audio Confirmation -->
+    <div class="modal-overlay" id="clearAudioConfirmModal">
+        <div class="modal-card" style="max-width: 480px; text-align: center; border-color: rgba(245, 158, 11, 0.5);">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔊</div>
+            <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 0.5rem;">Clear All Uploaded Audio?</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                This will delete all audio files you have uploaded. The external audio bank will NOT be affected.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelClearAudioBtn" class="btn btn-secondary" style="flex: 1; padding: 0.85rem;">Cancel</button>
+                <button id="confirmClearAudioBtn" class="btn btn-warning" style="flex: 1; padding: 0.85rem; font-weight: 900;">Yes, Clear All Audio</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,233 @@
+{
+  "competitionName": "ALPHA.bet 2026 - 88F4BZ",
+  "competitionCode": "88F4BZ",
+  "isPaused": false,
+  "isScoreboardVisible": false,
+  "currentRound": "ROUND 1 — SPELL IT",
+  "roundKey": "round_1",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 2,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 2,
+      "questionsCompleted": 1
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790672933833",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Saline",
+      "meaning": "a liquid mixture of salt and pure water",
+      "audioFile": "saline.mp3"
+    },
+    {
+      "id": "q_2_1790672933833",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Impossible",
+      "meaning": "not able to occur, exist, or be done",
+      "audioFile": "impossible.mp3"
+    },
+    {
+      "id": "q_3_1790672933833",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Warfare",
+      "meaning": "fighting",
+      "audioFile": "warfare.mp3"
+    },
+    {
+      "id": "q_4_1790672933833",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Jiggery",
+      "meaning": "secret or dishonest behaviour",
+      "audioFile": "jiggery.mp3"
+    },
+    {
+      "id": "q_5_1790672933833",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Victory",
+      "meaning": "success",
+      "audioFile": "victory.mp3"
+    },
+    {
+      "id": "q_6_1790672933833",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Fawn",
+      "meaning": "a young deer in its first year.",
+      "audioFile": "fawn.mp3"
+    },
+    {
+      "id": "q_7_1790672933833",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Defied",
+      "meaning": "to refuse to obey a person, decision, law, situation,",
+      "audioFile": "defied.mp3"
+    },
+    {
+      "id": "q_8_1790672933833",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Geology",
+      "meaning": "the study of the rocks and similar substances that make up the earth's surface",
+      "audioFile": "geology.mp3"
+    },
+    {
+      "id": "q_9_1790672933833",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Regret",
+      "meaning": "a feeling of sadness about something sad or wrong",
+      "audioFile": "regret.mp3"
+    },
+    {
+      "id": "q_10_1790672933833",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Cartilage",
+      "meaning": "strong, flexible connective tissue that protects your joints and bones.",
+      "audioFile": "cartilage.mp3"
+    },
+    {
+      "id": "q_11_1790672933833",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Obscure",
+      "meaning": "not clear and difficult to understand or see",
+      "audioFile": "obscure.mp3"
+    },
+    {
+      "id": "q_12_1790672933833",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Vapor",
+      "meaning": "a substance diffused or suspended in the air",
+      "audioFile": "vapor.mp3"
+    },
+    {
+      "id": "q_13_1790672933833",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Magnetite",
+      "meaning": "a mineral and one of the main iron ores",
+      "audioFile": "magnetite.mp3"
+    },
+    {
+      "id": "q_14_1790672933833",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Saddle",
+      "meaning": "a seat for a rider on a horse, bicycle",
+      "audioFile": "saddle.mp3"
+    },
+    {
+      "id": "q_15_1790672933833",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Terrain",
+      "meaning": "a stretch of land",
+      "audioFile": "terrain.mp3"
+    },
+    {
+      "id": "q_16_1790672933833",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Nintendo",
+      "meaning": "a system for playing video games",
+      "audioFile": "nintendo.mp3"
+    },
+    {
+      "id": "q_17_1790672933833",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Acorns",
+      "meaning": "an oval nut that grows on an oak tree",
+      "audioFile": "acorns.mp3"
+    },
+    {
+      "id": "q_18_1790672933833",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Orchard",
+      "meaning": "a piece of enclosed land planted with fruit trees.",
+      "audioFile": "orchard.mp3"
+    },
+    {
+      "id": "q_19_1790672933833",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Terrible",
+      "meaning": "extremely bad or serious",
+      "audioFile": "terrible.mp3"
+    },
+    {
+      "id": "q_20_1790672933833",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Quench",
+      "meaning": "to satisfy your feeling of thirst by drinking liquid.",
+      "audioFile": "quench.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "available",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "available",
+    "7": "available",
+    "8": "available",
+    "9": "available",
+    "10": "available",
+    "11": "available",
+    "12": "used",
+    "13": "available",
+    "14": "available",
+    "15": "available",
+    "16": "available",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [
+    "ablution",
+    "vapor"
+  ],
+  "activeQuestion": null,
+  "lastResult": {
+    "boxNo": 12,
+    "boxLabel": "12",
+    "word": "Vapor",
+    "studentAnswer": "",
+    "isSpellingCorrect": true,
+    "meaningCorrect": false,
+    "points": 1,
+    "studentName": "Student 1",
+    "timestamp": 1790674631709
+  },
+  "roundSettings": {
+    "questionsPerStudent": 5,
+    "studentTypingEnabled": false
+  }
+}

@@ -31,11 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const replayWordBtnEl = document.getElementById('replayWordBtn');
     const audioStatePillEl = document.getElementById('audioStatePill');
 
-    // Answer and Auto-Check Elements
+    // Answer and Auto/Manual Check Elements
     const studentAnswerDisplayEl = document.getElementById('studentAnswerDisplay');
     const autoCheckBadgeEl = document.getElementById('autoCheckBadge');
     const acceptResultBtnEl = document.getElementById('acceptResultBtn');
     const overrideResultBtnEl = document.getElementById('overrideResultBtn');
+    const manualCorrectBtnEl = document.getElementById('manualCorrectBtn');
+    const manualWrongBtnEl = document.getElementById('manualWrongBtn');
+    const evalModeBadgeEl = document.getElementById('evalModeBadge');
 
     // Round 2 Meaning Elements
     const round2MeaningSectionEl = document.getElementById('round2MeaningSection');
@@ -54,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Settings Elements
     const questionsPerStudentInputEl = document.getElementById('questionsPerStudentInput');
     const setQuestionsPerStudentBtnEl = document.getElementById('setQuestionsPerStudentBtn');
+    const enableTypingBtnEl = document.getElementById('enableTypingBtn');
+    const disableTypingBtnEl = document.getElementById('disableTypingBtn');
+    const typingModeStatusBadgeEl = document.getElementById('typingModeStatusBadge');
     const audioFileInputEl = document.getElementById('audioFileInput');
     const uploadAudioBtnEl = document.getElementById('uploadAudioBtn');
     const resetCompetitionBtnEl = document.getElementById('resetCompetitionBtn');
@@ -68,20 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveStudentBtnEl = document.getElementById('saveStudentBtn');
     const cancelStudentBtnEl = document.getElementById('cancelStudentBtn');
 
-    const uploadExcelModalEl = document.getElementById('uploadExcelModal');
+    // Upload Category Panel Elements (inline panel, no modal)
     const excelFileInputEl = document.getElementById('excelFileInput');
     const uploadExcelBtnEl = document.getElementById('uploadExcelBtn');
-    const cancelExcelBtnEl = document.getElementById('cancelExcelBtn');
-    const openExcelModalBtnEl = document.getElementById('openExcelModalBtn');
-
-    // Students Excel Upload Elements
-    const uploadStudentsModalEl = document.getElementById('uploadStudentsModal');
-    const openStudentExcelModalBtnEl = document.getElementById('openStudentExcelModalBtn');
-    const importStudentsExcelBtnEl = document.getElementById('importStudentsExcelBtn');
-    const closeStudentsModalBtnEl = document.getElementById('closeStudentsModalBtn');
-    const cancelStudentsExcelBtnEl = document.getElementById('cancelStudentsExcelBtn');
     const studentsExcelFileInputEl = document.getElementById('studentsExcelFileInput');
     const uploadStudentsExcelSubmitBtnEl = document.getElementById('uploadStudentsExcelSubmitBtn');
+    const uploadCategorySelectEl = document.getElementById('uploadCategorySelect');
+    const uploadCenterCardEl = document.getElementById('uploadCenterCard');
+    const uploadPanelWordsEl = document.getElementById('uploadPanelWords');
+    const uploadPanelAudioEl = document.getElementById('uploadPanelAudio');
+    const uploadPanelStudentsEl = document.getElementById('uploadPanelStudents');
+
+    // Header shortcut buttons (scroll to upload panel)
+    const openExcelModalBtnEl = document.getElementById('openExcelModalBtn');
+    const openStudentExcelModalBtnEl = document.getElementById('openStudentExcelModalBtn');
+    const importStudentsExcelBtnEl = document.getElementById('importStudentsExcelBtn');
 
     const scoreboardModalEl = document.getElementById('scoreboardModal');
     const openScoreboardBtnEl = document.getElementById('openScoreboardBtn');
@@ -101,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearWordsConfirmModalEl = document.getElementById('clearWordsConfirmModal');
     const cancelClearWordsBtnEl = document.getElementById('cancelClearWordsBtn');
     const confirmClearWordsBtnEl = document.getElementById('confirmClearWordsBtn');
+
+    // Clear Audio Elements
+    const clearUploadedAudioBtnEl = document.getElementById('clearUploadedAudioBtn');
+    const clearAudioConfirmModalEl = document.getElementById('clearAudioConfirmModal');
+    const cancelClearAudioBtnEl = document.getElementById('cancelClearAudioBtn');
+    const confirmClearAudioBtnEl = document.getElementById('confirmClearAudioBtn');
 
     let currentGameState = null;
     let competitionCode = null;
@@ -211,6 +224,17 @@ document.addEventListener('DOMContentLoaded', () => {
             endTieBreakerBtnEl.style.display = 'none';
         }
 
+        // Student Typing Mode toggle state
+        const isTypingEnabled = state.roundSettings?.studentTypingEnabled !== false;
+        if (typingModeStatusBadgeEl) {
+            typingModeStatusBadgeEl.className = `mode-status-pill ${isTypingEnabled ? 'typing-on' : 'typing-off'}`;
+            typingModeStatusBadgeEl.innerHTML = isTypingEnabled ? '⌨️ TYPING ON' : '🎤 ORAL MODE';
+        }
+        if (enableTypingBtnEl && disableTypingBtnEl) {
+            enableTypingBtnEl.className = isTypingEnabled ? 'btn btn-primary' : 'btn btn-secondary';
+            disableTypingBtnEl.className = isTypingEnabled ? 'btn btn-secondary' : 'btn btn-primary';
+        }
+
         // Render Control Panel Leaderboard
         renderControlLeaderboard(state);
     }
@@ -269,34 +293,72 @@ document.addEventListener('DOMContentLoaded', () => {
         correctWordDisplayEl.textContent = q.word;
         wordMeaningDisplayEl.textContent = q.meaning ? `"${q.meaning}"` : "(No definition provided)";
 
-        // Student Answer
+        // Preload audio for instant playback when teacher clicks "Play Word"
+        if (window.soundEngine && q.word) {
+            window.soundEngine.preloadAudio(q.word);
+        }
+
+        // Check typing mode setting
+        const isTypingEnabled = state.roundSettings?.studentTypingEnabled !== false;
+
+        if (evalModeBadgeEl) {
+            evalModeBadgeEl.textContent = isTypingEnabled ? 'Typing Mode' : 'Oral Mode';
+            evalModeBadgeEl.style.color = isTypingEnabled ? 'var(--primary-cyan)' : 'var(--accent-gold)';
+        }
+
+        // Student Answer display
         if (q.studentAnswer) {
             studentAnswerDisplayEl.innerHTML = `<span style="color:#ffffff">${q.studentAnswer}</span>`;
+        } else if (!isTypingEnabled) {
+            studentAnswerDisplayEl.innerHTML = `<span style="color:var(--accent-gold); font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:0.5rem;">🎤 ORAL SPELLING (Student spells aloud)</span>`;
         } else {
             studentAnswerDisplayEl.innerHTML = `<span class="waiting-student-type">Student listening / typing spelling...</span>`;
         }
 
-        // Automatic Check Badge & Overrides
+        // Spelling Evaluation: Auto or Manual Verdict
         const effectiveVerdict = q.manualOverride || q.autoResult;
 
-        if (q.status === 'submitted' || effectiveVerdict) {
+        if (effectiveVerdict) {
             if (effectiveVerdict === 'correct') {
                 autoCheckBadgeEl.className = 'check-verdict-badge correct';
-                autoCheckBadgeEl.innerHTML = `✓ CORRECT SPELLING ${q.manualOverride ? '(OVERRIDDEN)' : ''}`;
+                autoCheckBadgeEl.innerHTML = `✓ SPELLING RIGHT (+1) ${q.manualOverride ? '(MANUAL)' : ''}`;
+                if (manualCorrectBtnEl) manualCorrectBtnEl.className = 'btn btn-success active';
+                if (manualWrongBtnEl) manualWrongBtnEl.className = 'btn btn-secondary';
             } else {
                 autoCheckBadgeEl.className = 'check-verdict-badge incorrect';
-                autoCheckBadgeEl.innerHTML = `✕ WRONG SPELLING ${q.manualOverride ? '(OVERRIDDEN)' : ''}`;
+                autoCheckBadgeEl.innerHTML = `✕ SPELLING WRONG (+0) ${q.manualOverride ? '(MANUAL)' : ''}`;
+                if (manualCorrectBtnEl) manualCorrectBtnEl.className = 'btn btn-secondary';
+                if (manualWrongBtnEl) manualWrongBtnEl.className = 'btn btn-danger active';
             }
-            overrideResultBtnEl.disabled = false;
-            acceptResultBtnEl.disabled = false;
             confirmQuestionBtnEl.disabled = false;
+        } else if (q.status === 'submitted') {
+            // Submitted in typing mode but no verdict yet
+            autoCheckBadgeEl.className = 'check-verdict-badge';
+            autoCheckBadgeEl.style.background = 'rgba(255,255,255,0.08)';
+            autoCheckBadgeEl.style.color = '#ffffff';
+            autoCheckBadgeEl.innerHTML = `Submitted — Click Right or Wrong`;
+            if (manualCorrectBtnEl) manualCorrectBtnEl.className = 'btn btn-secondary';
+            if (manualWrongBtnEl) manualWrongBtnEl.className = 'btn btn-secondary';
+            confirmQuestionBtnEl.disabled = true;
+        } else if (!isTypingEnabled) {
+            // Oral mode — awaiting judge click
+            autoCheckBadgeEl.className = 'check-verdict-badge';
+            autoCheckBadgeEl.style.background = 'rgba(245, 158, 11, 0.12)';
+            autoCheckBadgeEl.style.border = '1px solid rgba(245, 158, 11, 0.35)';
+            autoCheckBadgeEl.style.color = 'var(--accent-gold)';
+            autoCheckBadgeEl.innerHTML = `⚡ Awaiting Decision: Click Right or Wrong below`;
+            if (manualCorrectBtnEl) manualCorrectBtnEl.className = 'btn btn-secondary';
+            if (manualWrongBtnEl) manualWrongBtnEl.className = 'btn btn-secondary';
+            confirmQuestionBtnEl.disabled = true;
         } else {
+            // Typing mode — awaiting student submission
             autoCheckBadgeEl.className = 'check-verdict-badge';
             autoCheckBadgeEl.style.background = 'rgba(255,255,255,0.05)';
+            autoCheckBadgeEl.style.border = '1px solid rgba(255,255,255,0.1)';
             autoCheckBadgeEl.style.color = '#94a3b8';
             autoCheckBadgeEl.innerHTML = `Waiting for student submit...`;
-            overrideResultBtnEl.disabled = true;
-            acceptResultBtnEl.disabled = true;
+            if (manualCorrectBtnEl) manualCorrectBtnEl.className = 'btn btn-secondary';
+            if (manualWrongBtnEl) manualWrongBtnEl.className = 'btn btn-secondary';
             confirmQuestionBtnEl.disabled = true;
         }
 
@@ -327,15 +389,49 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('teacher_play_audio');
     });
 
+    // Manual Correct / Wrong Handlers (Works for ALL rounds)
+    if (manualCorrectBtnEl) {
+        manualCorrectBtnEl.addEventListener('click', () => {
+            socket.emit('teacher_override_result', { newResult: 'correct' });
+            showToast('Marked as RIGHT ✓', 'success');
+        });
+    }
+
+    if (manualWrongBtnEl) {
+        manualWrongBtnEl.addEventListener('click', () => {
+            socket.emit('teacher_override_result', { newResult: 'incorrect' });
+            showToast('Marked as WRONG ✕', 'warning');
+        });
+    }
+
+    // Toggle Student Typing Mode Handlers
+    if (enableTypingBtnEl) {
+        enableTypingBtnEl.addEventListener('click', () => {
+            socket.emit('teacher_toggle_student_typing', { enabled: true });
+            showToast('Student Typing Mode ENABLED ⌨️', 'success');
+        });
+    }
+
+    if (disableTypingBtnEl) {
+        disableTypingBtnEl.addEventListener('click', () => {
+            socket.emit('teacher_toggle_student_typing', { enabled: false });
+            showToast('Student Typing Mode DISABLED (Oral Mode) 🎤', 'warning');
+        });
+    }
+
     // Accept / Confirm Result
-    acceptResultBtnEl.addEventListener('click', () => {
-        showToast('Automatic result accepted. Click Confirm & Record to finish.', 'info');
-    });
+    if (acceptResultBtnEl) {
+        acceptResultBtnEl.addEventListener('click', () => {
+            showToast('Automatic result accepted. Click Confirm & Record to finish.', 'info');
+        });
+    }
 
     // Override Result
-    overrideResultBtnEl.addEventListener('click', () => {
-        socket.emit('teacher_override_result', {});
-    });
+    if (overrideResultBtnEl) {
+        overrideResultBtnEl.addEventListener('click', () => {
+            socket.emit('teacher_override_result', {});
+        });
+    }
 
     // Round 2 Meaning Marking
     meaningCorrectBtnEl.addEventListener('click', () => {
@@ -417,66 +513,91 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Excel Word Bank Upload Modal
-    openExcelModalBtnEl.addEventListener('click', () => {
-        uploadExcelModalEl.classList.add('active');
-    });
+    // =====================================================
+    // UPLOAD CATEGORY PANEL – Dropdown + Subpanel Logic
+    // =====================================================
 
-    cancelExcelBtnEl.addEventListener('click', () => {
-        uploadExcelModalEl.classList.remove('active');
-    });
+    /** Switch the visible upload subpanel and optionally scroll to the card */
+    function switchUploadPanel(category, scrollToCard = false) {
+        if (!uploadCategorySelectEl) return;
+        uploadCategorySelectEl.value = category;
+        if (uploadPanelWordsEl)    uploadPanelWordsEl.style.display    = category === 'words'    ? 'flex' : 'none';
+        if (uploadPanelAudioEl)    uploadPanelAudioEl.style.display    = category === 'audio'    ? 'flex' : 'none';
+        if (uploadPanelStudentsEl) uploadPanelStudentsEl.style.display = category === 'students' ? 'flex' : 'none';
 
-    uploadExcelBtnEl.addEventListener('click', async () => {
-        const file = excelFileInputEl.files[0];
-        if (!file) {
-            alert('Please select an Excel (.xlsx, .xls) file first.');
-            return;
+        // Auto-expand the card if collapsed
+        const bodyEl = document.getElementById('uploadCenterBody');
+        const cardEl = document.getElementById('uploadCenterCard');
+        const toggleEl = document.getElementById('uploadCenterToggle');
+        if (bodyEl && bodyEl.style.display === 'none') {
+            bodyEl.style.display = 'block';
+            if (cardEl) cardEl.classList.add('expanded');
+            if (toggleEl) toggleEl.setAttribute('aria-expanded', 'true');
         }
 
-        const formData = new FormData();
-        formData.append('file', file);
+        if (scrollToCard && uploadCenterCardEl) {
+            uploadCenterCardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            uploadCenterCardEl.classList.add('highlight-focus');
+            setTimeout(() => uploadCenterCardEl.classList.remove('highlight-focus'), 1800);
+        }
+    }
 
-        try {
-            uploadExcelBtnEl.disabled = true;
-            uploadExcelBtnEl.textContent = 'Uploading...';
-            const res = await fetch(`/api/competitions/${competitionCode}/upload-words`, {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            if (data.success) {
-                showToast(`Success! Word bank updated with ${data.count} words.`, 'success');
-                uploadExcelModalEl.classList.remove('active');
-            } else {
-                alert(`Upload failed: ${data.error}`);
+    // Dropdown change event
+    if (uploadCategorySelectEl) {
+        uploadCategorySelectEl.addEventListener('change', () => {
+            switchUploadPanel(uploadCategorySelectEl.value, false);
+        });
+    }
+
+    // Header shortcut: Word Bank → switch to 'words' tab
+    if (openExcelModalBtnEl) {
+        openExcelModalBtnEl.addEventListener('click', () => switchUploadPanel('words', true));
+    }
+
+    // Header shortcut: Student List → switch to 'students' tab
+    if (openStudentExcelModalBtnEl) {
+        openStudentExcelModalBtnEl.addEventListener('click', () => switchUploadPanel('students', true));
+    }
+
+    // Left-column "📁 Excel" button → switch to 'students' tab
+    if (importStudentsExcelBtnEl) {
+        importStudentsExcelBtnEl.addEventListener('click', () => switchUploadPanel('students', true));
+    }
+
+    // Word Bank upload handler
+    if (uploadExcelBtnEl) {
+        uploadExcelBtnEl.addEventListener('click', async () => {
+            const file = excelFileInputEl ? excelFileInputEl.files[0] : null;
+            if (!file) {
+                showToast('Please select an Excel (.xlsx, .xls) file first.', 'warning');
+                return;
             }
-        } catch (err) {
-            alert(`Network error: ${err.message}`);
-        } finally {
-            uploadExcelBtnEl.disabled = false;
-            uploadExcelBtnEl.textContent = 'Upload & Refresh Grid';
-        }
-    });
-
-    // Student Excel Upload Modal Handlers
-    function openStudentsModal() {
-        if (uploadStudentsModalEl) {
-            if (studentsExcelFileInputEl) studentsExcelFileInputEl.value = '';
-            uploadStudentsModalEl.classList.add('active');
-        }
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                uploadExcelBtnEl.disabled = true;
+                uploadExcelBtnEl.textContent = 'Uploading...';
+                const res = await fetch(`/api/competitions/${competitionCode}/upload-words`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`✅ Word bank updated with ${data.count} words.`, 'success');
+                    if (excelFileInputEl) excelFileInputEl.value = '';
+                } else {
+                    showToast(`Upload failed: ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast(`Network error: ${err.message}`, 'danger');
+            } finally {
+                uploadExcelBtnEl.disabled = false;
+                uploadExcelBtnEl.textContent = '📤 Upload & Refresh Grid';
+            }
+        });
     }
 
-    function closeStudentsModal() {
-        if (uploadStudentsModalEl) {
-            uploadStudentsModalEl.classList.remove('active');
-        }
-    }
-
-    if (openStudentExcelModalBtnEl) openStudentExcelModalBtnEl.addEventListener('click', openStudentsModal);
-    if (importStudentsExcelBtnEl) importStudentsExcelBtnEl.addEventListener('click', openStudentsModal);
-    if (closeStudentsModalBtnEl) closeStudentsModalBtnEl.addEventListener('click', closeStudentsModal);
-    if (cancelStudentsExcelBtnEl) cancelStudentsExcelBtnEl.addEventListener('click', closeStudentsModal);
-
+    // Student list import handler (inline panel)
     if (uploadStudentsExcelSubmitBtnEl) {
         uploadStudentsExcelSubmitBtnEl.addEventListener('click', async () => {
             const file = studentsExcelFileInputEl?.files?.[0];
@@ -503,8 +624,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast(`Success! Imported ${data.count} student(s). Total: ${data.totalStudents}`, 'success');
-                    closeStudentsModal();
+                    showToast(`✅ Imported ${data.count} student(s). Total: ${data.totalStudents}`, 'success');
+                    if (studentsExcelFileInputEl) studentsExcelFileInputEl.value = '';
                 } else {
                     showToast(`Import failed: ${data.error}`, 'danger');
                 }
@@ -512,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(`Network error: ${err.message}`, 'danger');
             } finally {
                 uploadStudentsExcelSubmitBtnEl.disabled = false;
-                uploadStudentsExcelSubmitBtnEl.textContent = 'Import Students';
+                uploadStudentsExcelSubmitBtnEl.textContent = '👥 Import Students';
             }
         });
     }
@@ -673,10 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (clearAllWordsBtnEl) clearAllWordsBtnEl.addEventListener('click', () => {
-        if (uploadExcelModalEl) uploadExcelModalEl.classList.remove('active');
-        openClearWordsModal();
-    });
+    if (clearAllWordsBtnEl) clearAllWordsBtnEl.addEventListener('click', openClearWordsModal);
     if (clearWordsDangerBtnEl) clearWordsDangerBtnEl.addEventListener('click', openClearWordsModal);
     if (cancelClearWordsBtnEl) cancelClearWordsBtnEl.addEventListener('click', closeClearWordsModal);
 
@@ -701,6 +819,81 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Clear Uploaded Audio Files
+    function openClearAudioModal() {
+        if (clearAudioConfirmModalEl) {
+            clearAudioConfirmModalEl.classList.add('active');
+        }
+    }
+
+    function closeClearAudioModal() {
+        if (clearAudioConfirmModalEl) {
+            clearAudioConfirmModalEl.classList.remove('active');
+        }
+    }
+
+    if (clearUploadedAudioBtnEl) clearUploadedAudioBtnEl.addEventListener('click', openClearAudioModal);
+    if (cancelClearAudioBtnEl) cancelClearAudioBtnEl.addEventListener('click', closeClearAudioModal);
+
+    if (confirmClearAudioBtnEl) {
+        confirmClearAudioBtnEl.addEventListener('click', async () => {
+            confirmClearAudioBtnEl.disabled = true;
+            confirmClearAudioBtnEl.textContent = 'Clearing...';
+            try {
+                const res = await fetch(`/api/competitions/${competitionCode}/clear-uploaded-audio`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Cleared ${data.deleted} uploaded audio file(s).`, 'success');
+                    closeClearAudioModal();
+                } else {
+                    showToast(`Error: ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast(`Network error: ${err.message}`, 'danger');
+            } finally {
+                confirmClearAudioBtnEl.disabled = false;
+                confirmClearAudioBtnEl.textContent = 'Yes, Clear All Audio';
+            }
+        });
+    }
+
+    // =====================================================
+    // ACCORDION LOGIC (Upload Category + Settings cards)
+    // =====================================================
+    function setupAccordion(toggleId, bodyId, cardEl) {
+        const toggleEl = document.getElementById(toggleId);
+        const bodyEl = document.getElementById(bodyId);
+        if (!toggleEl || !bodyEl || !cardEl) return;
+
+        function toggle() {
+            const willOpen = !cardEl.classList.contains('expanded');
+            if (willOpen) {
+                cardEl.classList.add('expanded');
+                bodyEl.style.display = 'block';
+                toggleEl.setAttribute('aria-expanded', 'true');
+            } else {
+                cardEl.classList.remove('expanded');
+                bodyEl.style.display = 'none';
+                toggleEl.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        toggleEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggle();
+        });
+
+        toggleEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle();
+            }
+        });
+    }
+
+    setupAccordion('uploadCenterToggle', 'uploadCenterBody', document.getElementById('uploadCenterCard'));
+    setupAccordion('settingsCardToggle', 'settingsCardBody', document.getElementById('settingsCard'));
 
     // Toast Utility
     function showToast(msg, type = 'info') {

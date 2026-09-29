@@ -15,7 +15,7 @@
     <!-- Header Navigation -->
     <header class="app-header">
         <a href="/" class="app-brand">
-            <img src="logo.png" alt="Alpha.bet Logo" class="app-logo">
+            <img src="/logo.png" alt="Alpha.bet Logo" class="app-logo">
             <div class="app-title">ALPHA<span>.BET</span> 2026</div>
         </a>
 
@@ -144,20 +144,41 @@
                     ✓ Spelling sent to Control Panel. Teacher is evaluating your answer...
                 </div>
             </div>
+
+            <!-- Oral (No Typing) Mode Section -->
+            <div id="oralSection" class="oral-spelling-box" style="display: none;">
+                <div class="oral-mic-icon">🎤</div>
+                <h2 class="oral-title">
+                    ORAL SPELLING MODE
+                </h2>
+                <p class="oral-desc">
+                    Listen to the teacher's pronunciation, then <b>spell the word aloud</b> to the judges!
+                </p>
+                <div class="oral-status-pill">
+                    ⚖️ Judges will mark your spelling directly
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Full-Screen Scoreboard Overlay for Student -->
     <div class="modal-overlay" id="studentScoreboardModal">
-        <div class="modal-card" style="max-width: 600px; text-align: center;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <div style="font-size: 3rem;">🏆</div>
-                <button id="closeStudentScoreboardBtn" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">✕ Close</button>
+        <div class="modal-card student-scoreboard-card" style="max-width: 640px; text-align: center; border: 2px solid var(--accent-gold); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 45px rgba(245, 158, 11, 0.35);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div style="font-size: 2.8rem; filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.6));">🏆</div>
+                <button id="closeStudentScoreboardBtn" class="btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: 700;">✕ Close</button>
             </div>
-            <h1 style="font-size: 2rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 0.5rem;">ROUND SCOREBOARD</h1>
-            <p style="color: #94a3b8; margin-bottom: 1.5rem;">Current standings for all participants</p>
-            <div id="studentScoreboardList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 350px; overflow-y: auto; text-align: left; margin-bottom: 1rem;">
+            <h1 style="font-size: 2.1rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 0.3rem; letter-spacing: 0.05em; text-transform: uppercase;">
+                ROUND SCOREBOARD
+            </h1>
+            <p style="color: #94a3b8; font-size: 0.92rem; margin-bottom: 1.25rem;">
+                Questions completed! Here are the current competition standings:
+            </p>
+            <div id="studentScoreboardList" style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 380px; overflow-y: auto; text-align: left; margin-bottom: 1.25rem; padding-right: 0.25rem;">
                 <!-- Populated dynamically -->
+            </div>
+            <div style="padding-top: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.78rem; color: #64748b; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">
+                ✨ Standings broadcasted by Teacher / Judge Control
             </div>
         </div>
     </div>

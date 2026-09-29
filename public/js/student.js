@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputSectionEl = document.getElementById('inputSection');
     const submittedSectionEl = document.getElementById('submittedSection');
     const submittedWordDisplayEl = document.getElementById('submittedWordDisplay');
+    const oralSectionEl = document.getElementById('oralSection');
     const studentScoreboardModalEl = document.getElementById('studentScoreboardModal');
     const studentScoreboardListEl = document.getElementById('studentScoreboardList');
     const viewAllResultsBtnEl = document.getElementById('viewAllResultsBtn');
@@ -60,7 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('show_scoreboard', (data) => {
-        renderStudentScoreboard(data);
+        const fullData = { ...(currentGameState || {}), ...(data || {}), isScoreboardVisible: true };
+        renderStudentScoreboard(fullData);
+        if (window.soundEngine) {
+            window.soundEngine.playSound('round_change');
+        }
+    });
+
+    socket.on('hide_scoreboard', () => {
+        if (studentScoreboardModalEl) studentScoreboardModalEl.classList.remove('active');
     });
 
     socket.on('competition_reset', () => {
@@ -155,7 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Student Selects a Box
     function handleBoxSelect(boxNo) {
+        // Unlock audio on Android — this tap IS a user gesture
         if (window.soundEngine) {
+            window.soundEngine.unlockAudio();
             window.soundEngine.playSound('select');
         }
         socket.emit('student_select_question', { boxNo });
@@ -169,24 +180,44 @@ document.addEventListener('DOMContentLoaded', () => {
             spellingInputEl.value = '';
             inputSectionEl.style.display = 'block';
             submittedSectionEl.style.display = 'none';
+            if (oralSectionEl) oralSectionEl.style.display = 'none';
             return;
         }
 
         answerModalEl.classList.add('active');
         selectedBadgeEl.textContent = `QUESTION ${q.boxLabel} SELECTED`;
 
-        if (q.status === 'submitted') {
+        // Preload audio for this word when question activates
+        // (word is not sent to student, but we can request audio via socket)
+        if (window.soundEngine && q.hasAudioPlayed === false) {
+            window.soundEngine.initAudioContext();
+        }
+
+        // Check if student typing mode is enabled
+        const isTypingEnabled = state.roundSettings?.studentTypingEnabled !== false;
+
+        if (!isTypingEnabled) {
+            // Oral Spelling Mode: No typing, student spells aloud to judge
             inputSectionEl.style.display = 'none';
-            submittedSectionEl.style.display = 'block';
-            submittedWordDisplayEl.textContent = q.studentAnswer;
-        } else {
-            inputSectionEl.style.display = 'block';
             submittedSectionEl.style.display = 'none';
-            spellingInputEl.disabled = false;
-            submitBtnEl.disabled = false;
-            setTimeout(() => {
-                spellingInputEl.focus();
-            }, 100);
+            if (oralSectionEl) oralSectionEl.style.display = 'block';
+        } else {
+            // Typing Mode: Student types their spelling
+            if (oralSectionEl) oralSectionEl.style.display = 'none';
+
+            if (q.status === 'submitted') {
+                inputSectionEl.style.display = 'none';
+                submittedSectionEl.style.display = 'block';
+                submittedWordDisplayEl.textContent = q.studentAnswer;
+            } else {
+                inputSectionEl.style.display = 'block';
+                submittedSectionEl.style.display = 'none';
+                spellingInputEl.disabled = false;
+                submitBtnEl.disabled = false;
+                setTimeout(() => {
+                    spellingInputEl.focus();
+                }, 100);
+            }
         }
     }
 
@@ -238,25 +269,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Student Scoreboard Modal
     function renderStudentScoreboard(state) {
         if (!state) return;
-        const isVisible = state.isScoreboardVisible || false;
-        if (!isVisible && !state.students) {
-            if (studentScoreboardModalEl) studentScoreboardModalEl.classList.remove('active');
-            return;
-        }
+        const isVisible = state.isScoreboardVisible === true;
+        const studentsList = state.students || (currentGameState && currentGameState.students) || [];
 
-        if (state.students && studentScoreboardListEl) {
+        if (studentScoreboardListEl && studentsList.length > 0) {
             studentScoreboardListEl.innerHTML = '';
-            const sorted = [...state.students].sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+            const sorted = [...studentsList].sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
             sorted.forEach((s, idx) => {
                 const item = document.createElement('div');
-                item.className = `leaderboard-item ${s.id === state.currentStudentId ? 'active' : ''}`;
+                let rankClass = '';
+                if (idx === 0) rankClass = 'champion';
+                else if (idx === 1) rankClass = 'runner-up';
+                else if (idx === 2) rankClass = 'third-place';
+                if (s.id === state.currentStudentId) rankClass += ' current-student';
+
+                item.className = `student-scoreboard-item ${rankClass}`;
                 item.innerHTML = `
-                    <div class="item-rank-name">
-                        <span style="color:var(--accent-gold); font-family:var(--font-mono); font-size:1.2rem;">#${idx + 1}</span>
-                        <span style="font-size:1.1rem; font-weight:700;">${s.name}</span>
+                    <div style="display:flex; align-items:center; gap:0.85rem; min-width:0;">
+                        <span class="rank-number" style="font-family:var(--font-mono); font-size:1.25rem; font-weight:900; min-width:32px; color:${idx === 0 ? 'var(--accent-gold)' : idx === 1 ? '#94a3b8' : idx === 2 ? '#cd8535' : '#64748b'};">#${idx + 1}</span>
+                        <div style="display:flex; flex-direction:column; min-width:0;">
+                            <span style="font-size:1.15rem; font-weight:800; color:#ffffff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</span>
+                            <span style="font-size:0.75rem; color:#94a3b8; font-family:var(--font-mono);">
+                                R1: ${s.scoreR1 || 0} · R2: ${s.scoreR2 || 0} · TB: ${s.scoreTB || 0}
+                            </span>
+                        </div>
                     </div>
-                    <div style="font-size:1.3rem; font-weight:900; color:var(--primary-cyan); font-family:var(--font-mono);">
-                        ${s.totalScore || 0} pts
+                    <div style="text-align:right; flex-shrink:0;">
+                        <span style="font-size:1.4rem; font-weight:900; color:var(--primary-cyan); font-family:var(--font-mono);">
+                            ${s.totalScore || 0}
+                        </span>
+                        <span style="font-size:0.7rem; color:#94a3b8; display:block; font-weight:700;">PTS</span>
                     </div>
                 `;
                 studentScoreboardListEl.appendChild(item);
@@ -264,6 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (isVisible && studentScoreboardModalEl) {
+            // Dismiss question answering overlay if open so scoreboard is unobstructed
+            if (answerModalEl) answerModalEl.classList.remove('active');
             studentScoreboardModalEl.classList.add('active');
         } else if (!isVisible && studentScoreboardModalEl) {
             studentScoreboardModalEl.classList.remove('active');
