@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA.bet 2026 — Teacher Control Panel</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/control.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍🏫</text></svg>">
+</head>
+<body>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <a href="/" class="app-brand">
+            <img src="logo.png" alt="Alpha.bet Logo" class="app-logo">
+            <div class="app-title">ALPHA<span>.BET</span></div>
+        </a>
+
+        <div class="header-status">
+            <button id="openScoreboardBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+                🏆 Scoreboard
+            </button>
+            <button id="openExcelModalBtn" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+                📁 Word Bank
+            </button>
+            <div class="role-badge control">
+                <span class="status-dot"></span>
+                TEACHER / JUDGE CONTROL PANEL
+            </div>
+            <div id="competitionCodeBadge" class="role-badge" style="background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;">
+                Code: <span id="compCodeDisplay">—</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="control-container">
+        <!-- Control Top Bar -->
+        <div class="control-top-bar">
+            <!-- Current Student Card -->
+            <div class="student-card">
+                <div class="student-info">
+                    <span class="student-tag">Current Student</span>
+                    <div class="student-name-display text-neon-cyan" id="currentStudentName">Student 1</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;" id="studentQuestionsCount">0 / 5 Questions</div>
+                </div>
+
+                <div class="student-actions">
+                    <div style="text-align: right; margin-right: 0.5rem;">
+                        <span class="student-tag" style="display: block; margin-bottom: 2px;">Score</span>
+                        <span style="font-size: 2.2rem; font-weight: 900; font-family: var(--font-mono); color: var(--primary-cyan);" id="studentScore">0</span>
+                    </div>
+                    <select id="studentSelectDropdown" class="btn btn-secondary" style="background: rgba(15,23,42,0.9); font-weight: 700; padding: 0.6rem 1rem; outline: none; border: 1px solid var(--border-accent);">
+                        <!-- Options generated dynamically -->
+                    </select>
+                    <button id="addStudentBtn" class="btn btn-secondary" title="Add New Student" style="padding: 0.6rem 0.9rem;">
+                        + New
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Round Card -->
+            <div class="round-card">
+                <span class="round-tag">Active Round</span>
+                <div class="round-title-display" id="currentRoundTitle">ROUND 1 — SPELL IT</div>
+            </div>
+
+            <!-- Quick Controls -->
+            <div class="control-quick-actions">
+                <button id="pauseBtn" class="btn btn-secondary">
+                    ⏸ PAUSE
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN STAGE / EVALUATION INTERFACE -->
+        <div class="stage-card">
+            <!-- STATE A: WAITING FOR STUDENT TO SELECT QUESTION -->
+            <div class="waiting-box" id="waitingStage">
+                <div class="radar-spinner"></div>
+                <h2 class="waiting-title">Waiting for Student Selection</h2>
+                <p class="waiting-desc">
+                    The student must be the only person who selects a question from the 20-question grid. As soon as the student selects a question on the Student Panel, it will immediately appear here.
+                </p>
+                <div class="authority-pill">
+                    🔒 Sole Selection Authority: Student / Preview Panel
+                </div>
+            </div>
+
+            <!-- STATE B: STUDENT SELECTED A QUESTION (EVALUATION MODE) -->
+            <div class="evaluation-view" id="evaluationStage" style="display: none;">
+                <!-- Header of Selected Question -->
+                <div class="eval-header-row">
+                    <div class="student-selected-banner">
+                        <div class="selected-box-pill" id="selectedBoxPill">BOX 07</div>
+                        <div class="selected-box-label" id="selectedBoxLabel">STUDENT SELECTED: QUESTION 07</div>
+                    </div>
+                    <div class="status-badge-active" id="activeStatusBadge">
+                        QUESTION ACTIVE
+                    </div>
+                </div>
+
+                <!-- Word and Definition Card -->
+                <div class="word-meaning-card">
+                    <div class="correct-word-section">
+                        <span class="eval-label">Correct Word</span>
+                        <div class="correct-word-text" id="correctWordDisplay">beautiful</div>
+                    </div>
+                    <div class="word-meaning-section">
+                        <span class="eval-label">Word Meaning</span>
+                        <div class="meaning-text" id="wordMeaningDisplay">"pleasing to the senses"</div>
+                    </div>
+                </div>
+
+                <!-- Audio Action Bar -->
+                <div class="audio-action-bar">
+                    <button id="playWordBtn" class="btn btn-primary audio-btn-main">
+                        ▶ PLAY WORD
+                    </button>
+                    <button id="replayWordBtn" class="btn btn-secondary audio-btn-main">
+                        🔁 PLAY AGAIN
+                    </button>
+                    <div class="role-badge" id="audioStatePill" style="margin-left: auto;">
+                        Audio Ready
+                    </div>
+                </div>
+
+                <!-- Live Answers and Automatic Check Grid -->
+                <div class="answers-grid">
+                    <!-- Student Submitted Answer -->
+                    <div class="student-answer-panel">
+                        <span class="eval-label">Student Answer</span>
+                        <div class="student-answer-value" id="studentAnswerDisplay">
+                            <span class="waiting-student-type">Student listening / typing spelling...</span>
+                        </div>
+                    </div>
+
+                    <!-- Automatic Check & Override -->
+                    <div class="auto-check-panel">
+                        <div>
+                            <span class="eval-label">Automatic Spelling Check</span>
+                            <div class="check-verdict-badge" id="autoCheckBadge">
+                                Waiting for submit...
+                            </div>
+                        </div>
+
+                        <div class="check-actions">
+                            <button id="acceptResultBtn" class="btn btn-success" style="flex: 1;" disabled>
+                                ✓ ACCEPT
+                            </button>
+                            <button id="overrideResultBtn" class="btn btn-warning" style="flex: 1;" disabled>
+                                ⇄ OVERRIDE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 2 Oral Meaning Evaluation (Only shown during Round 2) -->
+                <div class="round-2-meaning-eval" id="round2MeaningSection" style="display: none;">
+                    <div>
+                        <span class="eval-label" style="color: var(--accent-gold);">Round 2 — Meaning Check</span>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-top: 0.3rem;">
+                            Student says meaning aloud (student does NOT type meaning)
+                        </div>
+                    </div>
+
+                    <div class="meaning-eval-buttons">
+                        <button id="meaningCorrectBtn" class="btn btn-secondary">
+                            ✓ Meaning Correct (+1)
+                        </button>
+                        <button id="meaningIncorrectBtn" class="btn btn-secondary">
+                            ✕ Meaning Wrong (+0)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Final Action: Confirm and Record Result -->
+                <div class="confirm-action-card">
+                    <div>
+                        <div style="font-size: 1.25rem; font-weight: 900; color: #ffffff;">Final Evaluation Decision</div>
+                        <div style="font-size: 0.9rem; color: #94a3b8;">Confirm score and mark this question as permanently USED.</div>
+                    </div>
+                    <button id="confirmQuestionBtn" class="btn btn-success" style="padding: 1.1rem 2.5rem; font-size: 1.1rem; font-weight: 900;" disabled>
+                        CONFIRM & RECORD SCORE ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Competition & Round Controls -->
+        <div class="control-bottom-tools">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="eval-label" style="margin-right: 0.5rem;">Rounds:</span>
+                <button id="btnRound1" class="btn btn-primary">Round 1: Spell It</button>
+                <button id="btnRound2" class="btn btn-secondary">Round 2: Spell & Meaning</button>
+                <button id="btnTieBreaker" class="btn btn-secondary">Tie-Breaker</button>
+                <button id="endTieBreakerBtn" class="btn btn-danger" style="display: none;">END TIE-BREAKER</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <button id="resetGridBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 700;">
+                    🎲 Reset Grid (20 Fresh Words)
+                </button>
+                <span style="font-size: 0.8rem; color: #64748b; font-weight: 700;">ALPHA.BET 2026 OFFICIAL</span>
+            </div>
+        </div>
+
+        <!-- Live Leaderboard Panel -->
+        <div class="control-bottom-tools" style="margin-top: 1.5rem;">
+            <div class="leaderboard-panel">
+                <div class="leaderboard-header-row">
+                    <span class="eval-label">🏆 LIVE LEADERBOARD</span>
+                    <button id="toggleLeaderboardBtn" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.7rem;">
+                        ▼ Collapse
+                    </button>
+                </div>
+                <div id="controlLeaderboardList" class="leaderboard-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings & Tools Panel -->
+        <div class="control-bottom-tools" style="margin-top: 1.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                
+                <!-- Questions Per Student Setting -->
+                <div class="settings-card">
+                    <div class="settings-label">Questions Per Student</div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <input 
+                            type="number" 
+                            id="questionsPerStudentInput" 
+                            class="text-input-field" 
+                            min="1" 
+                            max="20" 
+                            value="5" 
+                            style="width: 80px; text-align: center; font-size: 1.2rem; font-weight: 900; font-family: var(--font-mono);"
+                        />
+                        <button id="setQuestionsPerStudentBtn" class="btn btn-primary" style="flex: 1;">Apply</button>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">After this many questions, scoreboard auto-displays full screen</div>
+                </div>
+
+                <!-- Audio Upload -->
+                <div class="settings-card">
+                    <div class="settings-label">Upload Audio Files</div>
+                    <input type="file" id="audioFileInput" accept="audio/*" multiple style="margin-bottom: 0.75rem; color: #fff;" />
+                    <button id="uploadAudioBtn" class="btn btn-secondary" style="width: 100%;">Upload Audio(s)</button>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">MP3, WAV, OGG, M4A, AAC — max 20MB each</div>
+                </div>
+
+                <!-- Competition Reset -->
+                <div class="settings-card danger-zone">
+                    <div class="settings-label danger-label">Danger Zone</div>
+                    <button id="resetCompetitionBtn" class="btn btn-danger" style="width: 100%; padding: 1rem;">
+                        🔄 RESET COMPETITION
+                    </button>
+                    <div style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">Clears ALL scores, questions, and state</div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Add Student -->
+    <div class="modal-overlay" id="addStudentModal">
+        <div class="modal-card">
+            <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff; margin-bottom: 0.5rem;">Add New Student</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Enter participant name for this competition session.</p>
+            <input type="text" id="newStudentInput" class="text-input-field" placeholder="e.g. Student 3" style="margin-bottom: 1.5rem;" />
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelStudentBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                <button id="saveStudentBtn" class="btn btn-primary" style="flex: 1;">Add Student</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Upload Word Bank -->
+    <div class="modal-overlay" id="uploadExcelModal">
+        <div class="modal-card">
+            <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff; margin-bottom: 0.5rem;">Upload Question Bank</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Select an Excel file (.xlsx, .xls) containing "Words" and "Meanings" columns.</p>
+            <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="margin-bottom: 1.5rem; color: #ffffff;" />
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelExcelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                <button id="uploadExcelBtn" class="btn btn-primary" style="flex: 1;">Upload & Refresh Grid</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Scoreboard -->
+    <div class="modal-overlay" id="scoreboardModal">
+        <div class="modal-card" style="max-width: 650px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.8rem; font-weight: 900; color: #ffffff;">🏆 Competition Scoreboard</h2>
+                <button id="closeScoreboardBtn" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">✕ Close</button>
+            </div>
+            <div id="scoreboardList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto;">
+                <!-- Populated dynamically -->
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button id="broadcastScoreboardBtn" class="btn btn-primary" style="flex: 1;">
+                    📺 Broadcast to Display Screen
+                </button>
+                <button id="dismissScoreboardBtn" class="btn btn-warning" style="flex: 1;">
+                    ✕ Dismiss & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Reset Confirmation -->
+    <div class="modal-overlay" id="resetConfirmModal">
+        <div class="modal-card" style="max-width: 480px; text-align: center; border-color: rgba(239, 68, 68, 0.4);">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚠️</div>
+            <h2 style="font-size: 1.8rem; font-weight: 900; color: #ef4444; margin-bottom: 0.5rem;">Reset Competition?</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                This will reset all student scores, question boxes, and round state back to the beginning.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelResetBtn" class="btn btn-secondary" style="flex: 1; padding: 0.85rem;">Cancel</button>
+                <button id="confirmResetBtn" class="btn btn-danger" style="flex: 1; padding: 0.85rem; font-weight: 900;">Yes, Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/audio.js"></script>
+    <script src="/js/control.js"></script>
+</body>
+</html>

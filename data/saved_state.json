@@ -1,0 +1,238 @@
+{
+  "competitionName": "ALPHA.bet 2026 Competition",
+  "isPaused": false,
+  "isScoreboardVisible": false,
+  "currentRound": "TIE-BREAKER CHALLENGE",
+  "roundKey": "tie_breaker",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 0,
+      "scoreR2": 4,
+      "scoreTB": 2,
+      "totalScore": 6,
+      "questionsCompleted": 1
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790594737270",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Degradation",
+      "meaning": "process in which the beauty or quality of something is destroyed or spoiled",
+      "audioFile": "degradation.mp3"
+    },
+    {
+      "id": "q_2_1790594737270",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Weaver",
+      "meaning": "a person whose job is weaving cloth and other materials",
+      "audioFile": "weaver.mp3"
+    },
+    {
+      "id": "q_3_1790594737270",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Pavement",
+      "meaning": "a hard flat area at the side of a road for people to walk on.",
+      "audioFile": "pavement.mp3"
+    },
+    {
+      "id": "q_4_1790594737270",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Utensils",
+      "meaning": "a device or tool having a particular use",
+      "audioFile": "utensils.mp3"
+    },
+    {
+      "id": "q_5_1790594737270",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Helium",
+      "meaning": "a chemical element of the noble gas group with atomic number 2",
+      "audioFile": "helium.mp3"
+    },
+    {
+      "id": "q_6_1790594737270",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Accurate",
+      "meaning": "correct, exact, and without any mistakes",
+      "audioFile": "accurate.mp3"
+    },
+    {
+      "id": "q_7_1790594737270",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Abiotic",
+      "meaning": "relating to things in the environment that are not living",
+      "audioFile": "abiotic.mp3"
+    },
+    {
+      "id": "q_8_1790594737270",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Carbide",
+      "meaning": "a compound formed from carbon and another chemical element",
+      "audioFile": "carbide.mp3"
+    },
+    {
+      "id": "q_9_1790594737270",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Generous",
+      "meaning": "willing to give money, help, kindness",
+      "audioFile": "generous.mp3"
+    },
+    {
+      "id": "q_10_1790594737270",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Ranches",
+      "meaning": "a large farm",
+      "audioFile": "ranches.mp3"
+    },
+    {
+      "id": "q_11_1790594737270",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Mahogany",
+      "meaning": "a dark red-brown colour:",
+      "audioFile": "mahogany.mp3"
+    },
+    {
+      "id": "q_12_1790594737270",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Sanctuaries",
+      "meaning": "protection or a safe place",
+      "audioFile": "sanctuaries.mp3"
+    },
+    {
+      "id": "q_13_1790594737270",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Nephew",
+      "meaning": "a son of one's brother or sister,",
+      "audioFile": "nephew.mp3"
+    },
+    {
+      "id": "q_14_1790594737270",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Impulse",
+      "meaning": "a sudden, strong desire to do something",
+      "audioFile": "impulse.mp3"
+    },
+    {
+      "id": "q_15_1790594737270",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Imagination",
+      "meaning": "the ability to form mental pictures of people or things, or to have new ideas",
+      "audioFile": "imagination.mp3"
+    },
+    {
+      "id": "q_16_1790594737270",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Saddle",
+      "meaning": "a seat for a rider on a horse, bicycle",
+      "audioFile": "saddle.mp3"
+    },
+    {
+      "id": "q_17_1790594737270",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Castle",
+      "meaning": "a large strong building, built in the past by a ruler or important person to protect the people",
+      "audioFile": "castle.mp3"
+    },
+    {
+      "id": "q_18_1790594737270",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Whining",
+      "meaning": "the making of a long, high-pitched cry or sound",
+      "audioFile": "whining.mp3"
+    },
+    {
+      "id": "q_19_1790594737270",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Nectar",
+      "meaning": "a sweet liquid produced by flowers and collected by bee",
+      "audioFile": "nectar.mp3"
+    },
+    {
+      "id": "q_20_1790594737270",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Effortlessly",
+      "meaning": "done so well that it seems not to need much mental or physical activity",
+      "audioFile": "effortlessly.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "used",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "available",
+    "7": "available",
+    "8": "available",
+    "9": "available",
+    "10": "available",
+    "11": "available",
+    "12": "available",
+    "13": "available",
+    "14": "available",
+    "15": "available",
+    "16": "available",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [
+    "unfamiliar",
+    "deck",
+    "levitation",
+    "kindling",
+    "effluent",
+    "acorns",
+    "igneous",
+    "fascinate",
+    "weaver"
+  ],
+  "activeQuestion": null,
+  "lastResult": {
+    "boxNo": 2,
+    "boxLabel": "02",
+    "word": "Weaver",
+    "studentAnswer": "hkfgd",
+    "isSpellingCorrect": false,
+    "meaningCorrect": false,
+    "points": 0,
+    "studentName": "Student 1",
+    "timestamp": 1790594757895
+  },
+  "roundSettings": {
+    "questionsPerStudent": 5
+  }
+}

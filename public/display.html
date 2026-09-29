@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA.bet 2026 — Display & OBS Broadcast</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/display.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
+</head>
+<body class="display-body">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <div class="display-container">
+        <!-- Broadcast Header -->
+        <header class="broadcast-header">
+            <div class="broadcast-brand">
+                <img src="logo.png" alt="Logo" class="broadcast-logo">
+                <div class="broadcast-title">ALPHA<span>.BET</span> 2026</div>
+            </div>
+
+            <div class="header-center-info">
+                <div class="broadcast-round-tag" id="broadcastRound">
+                    ROUND 1 — SPELL IT
+                </div>
+            </div>
+
+            <div id="competitionCodeBadge" class="role-badge" style="background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.15em;">
+                Code: <span id="compCodeDisplay">—</span>
+            </div>
+        </header>
+
+        <!-- Broadcast Main Stage -->
+        <main class="broadcast-main">
+            <!-- 20-Question Grid (Read-Only) -->
+            <section class="display-grid-wrapper">
+                <div class="display-grid" id="displayGrid">
+                    <!-- Populated dynamically: 01 to 20 -->
+                </div>
+            </section>
+
+            <!-- Spotlight, Current Student, and Live Standings Sidebar -->
+            <aside class="display-side-col">
+                <!-- Current Student Card in Sidebar -->
+                <div class="student-spotlight-card">
+                    <div class="spotlight-card-top">
+                        <span class="spotlight-badge">CURRENT PARTICIPANT</span>
+                        <div class="student-spotlight-score-pill">
+                            <span class="score-pill-sub">SCORE</span>
+                            <span class="student-spotlight-score" id="currentStudentScore">0</span>
+                        </div>
+                    </div>
+                    <div class="student-spotlight-name" id="currentStudentName">Student 1</div>
+                </div>
+
+                <!-- Active Question Spotlight -->
+                <div class="spotlight-card">
+                    <div class="spotlight-active-box" id="spotlightBoxNo">READY</div>
+                    <div class="spotlight-state-text" id="spotlightStateText">WAITING FOR QUESTION SELECTION...</div>
+                    <div class="display-sound-wave" id="displaySoundWave" style="display: none;">
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Standings -->
+                <div class="leaderboard-card">
+                    <div class="leaderboard-header">
+                        🏆 LEADERBOARD
+                    </div>
+                    <div class="leaderboard-list" id="leaderboardList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="celebration-card">
+            <div class="celebration-title" id="celebrationTitle">CORRECT! ✓</div>
+            <div class="celebration-sub" id="celebrationSub">+1 POINT AWARDED</div>
+        </div>
+    </div>
+
+    <!-- Full-Screen Scoreboard Overlay -->
+    <div class="scoreboard-overlay" id="scoreboardOverlay">
+        <div class="scoreboard-card">
+            <div class="scoreboard-header">
+                <h1 class="scoreboard-title">🏆 COMPETITION SCOREBOARD</h1>
+                <div class="scoreboard-round" id="scoreboardRound">ROUND 1 — SPELL IT</div>
+            </div>
+            <div class="scoreboard-list" id="scoreboardList">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="scoreboard-footer">
+                <div class="scoreboard-note">Auto-dismissed when teacher continues</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/audio.js"></script>
+    <script src="/js/display.js"></script>
+</body>
+</html>

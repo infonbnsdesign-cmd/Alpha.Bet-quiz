@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA.bet 2026 — Student Panel</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/student.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+<body class="student-body">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <a href="/" class="app-brand">
+            <img src="logo.png" alt="Alpha.bet Logo" class="app-logo">
+            <div class="app-title">ALPHA<span>.BET</span> 2026</div>
+        </a>
+
+        <div class="header-status">
+            <div class="role-badge student">
+                <span class="status-dot"></span>
+                STUDENT PANEL
+            </div>
+            <div id="competitionCodeBadge" class="role-badge" style="background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;">
+                Code: <span id="compCodeDisplay">—</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container with Sidebar Layout -->
+    <main class="student-container">
+        <!-- Sidebar - Student Info -->
+        <aside class="student-sidebar glass-panel">
+            <div class="sidebar-top">
+                <div class="sidebar-header">
+                    <div class="sidebar-icon-badge">🎓</div>
+                    <div class="sidebar-title-group">
+                        <span class="sidebar-tag">CURRENT PARTICIPANT</span>
+                        <h2 class="sidebar-student-name text-neon-cyan" id="studentName">Student 1</h2>
+                    </div>
+                </div>
+
+                <div class="sidebar-score-card">
+                    <div class="score-card-label">CURRENT SCORE</div>
+                    <div class="score-card-value">
+                        <span class="sidebar-score-digit" id="studentScore">0</span>
+                        <span class="sidebar-score-unit">PTS</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="meta-group">
+                        <span class="meta-label">Active Round</span>
+                        <span class="meta-value text-neon-gold" id="roundTitle">ROUND 1 — SPELL IT</span>
+                    </div>
+                    <div class="meta-group">
+                        <span class="meta-label">Turn Progress</span>
+                        <span class="meta-value progress-text" id="questionsProgress">Completed: 0 / 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-tip">
+                    <span>💡</span> Click any unlocked box in the grid to pick your word.
+                </div>
+                <button id="viewAllResultsBtn" class="btn btn-secondary sidebar-btn">
+                    🏆 View Standings
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Grid Area -->
+        <section class="grid-main-area">
+            <!-- 20-Question Grid Header -->
+            <div class="grid-section-header">
+                <div class="grid-header-left">
+                    <h1 class="grid-title">20-QUESTION GRID</h1>
+                    <p class="grid-subtitle">Select any available box to begin your question turn</p>
+                </div>
+                <div class="grid-header-status">
+                    <span class="grid-live-indicator">
+                        <span class="pulse-dot"></span>
+                        YOUR SELECTION TURN
+                    </span>
+                </div>
+            </div>
+
+            <!-- The 20-Question Grid (01 to 20) -->
+            <div class="question-grid-wrapper">
+                <div class="question-grid" id="questionGrid">
+                    <!-- Populated dynamically: 01 to 20 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Answering Stage Overlay -->
+    <div class="answer-stage-overlay" id="answerModal">
+        <div class="answer-card glass-panel-elevated">
+            <div class="selected-badge" id="selectedBadge">
+                QUESTION 07 SELECTED
+            </div>
+
+            <div class="audio-listening-indicator" id="audioStatus">
+                <span class="sound-bars">
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                </span>
+                Waiting for teacher to play pronunciation...
+            </div>
+
+            <!-- Typing and Submission Section -->
+            <div id="inputSection">
+                <div class="spelling-input-group">
+                    <input 
+                        type="text" 
+                        id="spellingInput" 
+                        class="spelling-input" 
+                        placeholder="type your spelling here..." 
+                        autocomplete="off" 
+                        autocorrect="off" 
+                        autocapitalize="off" 
+                        spellcheck="false"
+                    />
+                </div>
+
+                <button id="submitBtn" class="btn submit-btn-large">
+                    SUBMIT SPELLING ➔
+                </button>
+            </div>
+
+            <!-- Submitted Feedback Section -->
+            <div id="submittedSection" class="submitted-box" style="display: none;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.3rem;">Your Submitted Answer</div>
+                <div class="submitted-word" id="submittedWordDisplay">beautiful</div>
+                <div class="waiting-review-text">
+                    ✓ Spelling sent to Control Panel. Teacher is evaluating your answer...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Screen Scoreboard Overlay for Student -->
+    <div class="modal-overlay" id="studentScoreboardModal">
+        <div class="modal-card" style="max-width: 600px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div style="font-size: 3rem;">🏆</div>
+                <button id="closeStudentScoreboardBtn" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">✕ Close</button>
+            </div>
+            <h1 style="font-size: 2rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 0.5rem;">ROUND SCOREBOARD</h1>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem;">Current standings for all participants</p>
+            <div id="studentScoreboardList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 350px; overflow-y: auto; text-align: left; margin-bottom: 1rem;">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/audio.js"></script>
+    <script src="/js/student.js"></script>
+</body>
+</html>

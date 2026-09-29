@@ -1,0 +1,232 @@
+{
+  "competitionName": "ALPHA.bet 2026 - LOGO.PNG",
+  "competitionCode": "LOGO.PNG",
+  "isPaused": false,
+  "isScoreboardVisible": false,
+  "currentRound": "ROUND 1 — SPELL IT",
+  "roundKey": "round_1",
+  "students": [
+    {
+      "id": "s1",
+      "name": "Student 1",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    },
+    {
+      "id": "s2",
+      "name": "Student 2",
+      "scoreR1": 0,
+      "scoreR2": 0,
+      "scoreTB": 0,
+      "totalScore": 0,
+      "questionsCompleted": 0
+    }
+  ],
+  "currentStudentId": "s1",
+  "questions": [
+    {
+      "id": "q_1_1790655224459",
+      "boxNo": 1,
+      "boxLabel": "01",
+      "word": "Lantern",
+      "meaning": "a lamp with a transparent case protecting the flame or electric bulb",
+      "audioFile": "lantern.mp3"
+    },
+    {
+      "id": "q_2_1790655224459",
+      "boxNo": 2,
+      "boxLabel": "02",
+      "word": "Manioc",
+      "meaning": "long tuberous edible roots and soft brittle stems",
+      "audioFile": "manioc.mp3"
+    },
+    {
+      "id": "q_3_1790655224459",
+      "boxNo": 3,
+      "boxLabel": "03",
+      "word": "Veins",
+      "meaning": "blood vessel",
+      "audioFile": "veins.mp3"
+    },
+    {
+      "id": "q_4_1790655224459",
+      "boxNo": 4,
+      "boxLabel": "04",
+      "word": "Overcrowded",
+      "meaning": "containing too many people or things",
+      "audioFile": "overcrowded.mp3"
+    },
+    {
+      "id": "q_5_1790655224459",
+      "boxNo": 5,
+      "boxLabel": "05",
+      "word": "Knitting",
+      "meaning": "to make clothes, etc. by using two long needles to connect wool or another type of thread into joined rows",
+      "audioFile": "knitting.mp3"
+    },
+    {
+      "id": "q_6_1790655224459",
+      "boxNo": 6,
+      "boxLabel": "06",
+      "word": "Bands",
+      "meaning": "a usually small group of musicians who play popular music together",
+      "audioFile": "bands.mp3"
+    },
+    {
+      "id": "q_7_1790655224459",
+      "boxNo": 7,
+      "boxLabel": "07",
+      "word": "Virtuous",
+      "meaning": "A virtuous person thinks himself or herself morally better than other people",
+      "audioFile": "virtuous.mp3"
+    },
+    {
+      "id": "q_8_1790655224459",
+      "boxNo": 8,
+      "boxLabel": "08",
+      "word": "Eaves",
+      "meaning": "the edge of a roof that sticks out over the walls",
+      "audioFile": "eaves.mp3"
+    },
+    {
+      "id": "q_9_1790655224459",
+      "boxNo": 9,
+      "boxLabel": "09",
+      "word": "Casement",
+      "meaning": "a type of window that is fixed on one side and opens like a door",
+      "audioFile": "casement.mp3"
+    },
+    {
+      "id": "q_10_1790655224459",
+      "boxNo": 10,
+      "boxLabel": "10",
+      "word": "Oblivious",
+      "meaning": "not aware of or not noticing something",
+      "audioFile": "oblivious.mp3"
+    },
+    {
+      "id": "q_11_1790655224459",
+      "boxNo": 11,
+      "boxLabel": "11",
+      "word": "Acorns",
+      "meaning": "an oval nut that grows on an oak tree",
+      "audioFile": "acorns.mp3"
+    },
+    {
+      "id": "q_12_1790655224459",
+      "boxNo": 12,
+      "boxLabel": "12",
+      "word": "Palanquin",
+      "meaning": "a big covered box-like vehicle usually with a seat for one person",
+      "audioFile": "palanquin.mp3"
+    },
+    {
+      "id": "q_13_1790655224459",
+      "boxNo": 13,
+      "boxLabel": "13",
+      "word": "Vinegar",
+      "meaning": "a sour-tasting liquid containing acetic acid",
+      "audioFile": "vinegar.mp3"
+    },
+    {
+      "id": "q_14_1790655224459",
+      "boxNo": 14,
+      "boxLabel": "14",
+      "word": "Mannerless",
+      "meaning": "without good manners; ill-mannered; discourteous; impolite.",
+      "audioFile": "mannerless.mp3"
+    },
+    {
+      "id": "q_15_1790655224459",
+      "boxNo": 15,
+      "boxLabel": "15",
+      "word": "Garbage",
+      "meaning": "rubbish or waste",
+      "audioFile": "garbage.mp3"
+    },
+    {
+      "id": "q_16_1790655224459",
+      "boxNo": 16,
+      "boxLabel": "16",
+      "word": "Feat",
+      "meaning": "an achievement that requires great courage, skill, or strength.",
+      "audioFile": "feat.mp3"
+    },
+    {
+      "id": "q_17_1790655224459",
+      "boxNo": 17,
+      "boxLabel": "17",
+      "word": "Termite",
+      "meaning": "a small tropical insect that eats wood",
+      "audioFile": "termite.mp3"
+    },
+    {
+      "id": "q_18_1790655224459",
+      "boxNo": 18,
+      "boxLabel": "18",
+      "word": "Painkiller",
+      "meaning": "a drug that is used for reducing pain.",
+      "audioFile": "painkiller.mp3"
+    },
+    {
+      "id": "q_19_1790655224459",
+      "boxNo": 19,
+      "boxLabel": "19",
+      "word": "Licensed",
+      "meaning": "having official permission to do, have, or sell something",
+      "audioFile": "licensed.mp3"
+    },
+    {
+      "id": "q_20_1790655224459",
+      "boxNo": 20,
+      "boxLabel": "20",
+      "word": "Castle",
+      "meaning": "a large strong building, built in the past by a ruler or important person to protect the people",
+      "audioFile": "castle.mp3"
+    }
+  ],
+  "gridState": {
+    "1": "available",
+    "2": "available",
+    "3": "available",
+    "4": "available",
+    "5": "available",
+    "6": "active",
+    "7": "available",
+    "8": "available",
+    "9": "available",
+    "10": "available",
+    "11": "available",
+    "12": "available",
+    "13": "available",
+    "14": "available",
+    "15": "available",
+    "16": "available",
+    "17": "available",
+    "18": "available",
+    "19": "available",
+    "20": "available"
+  },
+  "usedWords": [],
+  "activeQuestion": {
+    "boxNo": 6,
+    "boxLabel": "06",
+    "word": "Bands",
+    "meaning": "a usually small group of musicians who play popular music together",
+    "audioFile": "bands.mp3",
+    "status": "active",
+    "studentAnswer": "",
+    "autoResult": null,
+    "manualOverride": null,
+    "meaningResult": null,
+    "hasAudioPlayed": false,
+    "timestamp": 1790655802639
+  },
+  "lastResult": null,
+  "roundSettings": {
+    "questionsPerStudent": 5
+  }
+}
