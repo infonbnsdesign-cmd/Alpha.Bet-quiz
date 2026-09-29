@@ -127,24 +127,36 @@ class SoundEngine {
         if (!word) return;
         const cleanWord = word.trim();
 
-        // Try local audio file
-        const audioUrl = `/audio/${encodeURIComponent(cleanWord.toLowerCase())}.mp3`;
+        // 1. Try server case-insensitive audio endpoint (matches Apple.mp3, apple.mp3, etc.)
+        const audioUrl = `/api/audio-lookup/${encodeURIComponent(cleanWord)}`;
         const audio = new Audio(audioUrl);
 
+        let hasStarted = false;
+
         audio.onplay = () => {
+            hasStarted = true;
             if (onStart) onStart();
         };
         audio.onended = () => {
             if (onEnd) onEnd();
         };
+        audio.onerror = () => {
+            if (!hasStarted) {
+                // Audio file not found or failed, fallback to Speech Synthesis
+                this.speakWithSynthesis(cleanWord, onStart, onEnd);
+            } else if (onEnd) {
+                onEnd();
+            }
+        };
 
         const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // Audio file played successfully
+                // Audio file playing
             }).catch(() => {
-                // Fallback to Web Speech API
-                this.speakWithSynthesis(cleanWord, onStart, onEnd);
+                if (!hasStarted) {
+                    this.speakWithSynthesis(cleanWord, onStart, onEnd);
+                }
             });
         } else {
             this.speakWithSynthesis(cleanWord, onStart, onEnd);

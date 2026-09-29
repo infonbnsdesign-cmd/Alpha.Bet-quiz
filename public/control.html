@@ -259,13 +259,18 @@
                     <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">MP3, WAV, OGG, M4A, AAC — max 20MB each</div>
                 </div>
 
-                <!-- Competition Reset -->
+                <!-- Competition Reset & Clear Words -->
                 <div class="settings-card danger-zone">
                     <div class="settings-label danger-label">Danger Zone</div>
-                    <button id="resetCompetitionBtn" class="btn btn-danger" style="width: 100%; padding: 1rem;">
-                        🔄 RESET COMPETITION
-                    </button>
-                    <div style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">Clears ALL scores, questions, and state</div>
+                    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                        <button id="clearWordsDangerBtn" class="btn btn-warning" style="width: 100%; padding: 0.8rem; font-weight: 800;">
+                            🗑️ CLEAR ALL WORDS
+                        </button>
+                        <button id="resetCompetitionBtn" class="btn btn-danger" style="width: 100%; padding: 0.8rem; font-weight: 800;">
+                            🔄 RESET COMPETITION
+                        </button>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">Clears database words, scores, or competition state</div>
                 </div>
 
             </div>
@@ -327,9 +332,29 @@
             <h2 style="font-size: 1.6rem; font-weight: 900; color: #ffffff; margin-bottom: 0.5rem;">Upload Question Bank</h2>
             <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Select an Excel file (.xlsx, .xls) containing "Words" and "Meanings" columns.</p>
             <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="margin-bottom: 1.5rem; color: #ffffff;" />
-            <div style="display: flex; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                 <button id="cancelExcelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
-                <button id="uploadExcelBtn" class="btn btn-primary" style="flex: 1;">Upload & Refresh Grid</button>
+                <button id="uploadExcelBtn" class="btn btn-primary" style="flex: 1.5;">Upload & Refresh Grid</button>
+            </div>
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem; text-align: center;">
+                <button id="clearAllWordsBtn" class="btn btn-danger" style="width: 100%; padding: 0.75rem; font-size: 0.85rem;">
+                    🗑️ Clear All Words from Database
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Clear Words Confirmation -->
+    <div class="modal-overlay" id="clearWordsConfirmModal">
+        <div class="modal-card" style="max-width: 480px; text-align: center; border-color: rgba(245, 158, 11, 0.5);">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🗑️</div>
+            <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 0.5rem;">Clear All Words?</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                This will wipe all existing words from the database so you can upload a completely new set of words via Excel.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button id="cancelClearWordsBtn" class="btn btn-secondary" style="flex: 1; padding: 0.85rem;">Cancel</button>
+                <button id="confirmClearWordsBtn" class="btn btn-warning" style="flex: 1; padding: 0.85rem; font-weight: 900;">Yes, Clear All Words</button>
             </div>
         </div>
     </div>

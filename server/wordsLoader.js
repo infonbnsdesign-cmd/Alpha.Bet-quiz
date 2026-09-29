@@ -31,7 +31,34 @@ class WordsLoader {
         ];
     }
 
+    clearWords() {
+        this.words = [];
+        const jsonPath = path.join(__dirname, '../data/default_words.json');
+        try {
+            fs.writeFileSync(jsonPath, JSON.stringify([], null, 2), 'utf8');
+        } catch (e) {
+            console.error('[WordsLoader] Error clearing default_words.json:', e);
+        }
+        console.log('[WordsLoader] Cleared all words from database.');
+        return { success: true };
+    }
+
     get20Questions(seedOffset = 0, excludeWords = []) {
+        if (!this.words || this.words.length === 0) {
+            return Array.from({ length: 20 }, (_, index) => {
+                const num = index + 1;
+                const pad = num < 10 ? `0${num}` : `${num}`;
+                return {
+                    id: `q_${num}_${Date.now()}`,
+                    boxNo: num,
+                    boxLabel: pad,
+                    word: `Word ${num}`,
+                    meaning: `Please upload word bank in Control Panel`,
+                    audioFile: `word_${num}.mp3`
+                };
+            });
+        }
+
         const available = this.words.filter(w => !excludeWords.includes(w.word.toLowerCase()));
         const pool = available.length >= 20 ? available : this.words;
         
@@ -41,7 +68,11 @@ class WordsLoader {
             const j = Math.floor(Math.random() * (i + 1));
             [copy[i], copy[j]] = [copy[j], copy[i]];
         }
-        const selected = copy.slice(0, 20);
+        
+        const selected = [];
+        for (let i = 0; i < 20; i++) {
+            selected.push(copy[i % copy.length]);
+        }
 
         return selected.map((item, index) => {
             const num = index + 1;

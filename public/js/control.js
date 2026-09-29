@@ -95,6 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmResetBtnEl = document.getElementById('confirmResetBtn');
     const resetGridBtnEl = document.getElementById('resetGridBtn');
 
+    // Clear Words Elements
+    const clearAllWordsBtnEl = document.getElementById('clearAllWordsBtn');
+    const clearWordsDangerBtnEl = document.getElementById('clearWordsDangerBtn');
+    const clearWordsConfirmModalEl = document.getElementById('clearWordsConfirmModal');
+    const cancelClearWordsBtnEl = document.getElementById('cancelClearWordsBtn');
+    const confirmClearWordsBtnEl = document.getElementById('confirmClearWordsBtn');
+
     let currentGameState = null;
     let competitionCode = null;
 
@@ -649,6 +656,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (resetConfirmModalEl) {
                     resetConfirmModalEl.classList.remove('active');
                 }
+            }
+        });
+    }
+
+    // Clear Words Modal Handlers
+    function openClearWordsModal() {
+        if (clearWordsConfirmModalEl) {
+            clearWordsConfirmModalEl.classList.add('active');
+        }
+    }
+
+    function closeClearWordsModal() {
+        if (clearWordsConfirmModalEl) {
+            clearWordsConfirmModalEl.classList.remove('active');
+        }
+    }
+
+    if (clearAllWordsBtnEl) clearAllWordsBtnEl.addEventListener('click', () => {
+        if (uploadExcelModalEl) uploadExcelModalEl.classList.remove('active');
+        openClearWordsModal();
+    });
+    if (clearWordsDangerBtnEl) clearWordsDangerBtnEl.addEventListener('click', openClearWordsModal);
+    if (cancelClearWordsBtnEl) cancelClearWordsBtnEl.addEventListener('click', closeClearWordsModal);
+
+    if (confirmClearWordsBtnEl) {
+        confirmClearWordsBtnEl.addEventListener('click', async () => {
+            confirmClearWordsBtnEl.disabled = true;
+            confirmClearWordsBtnEl.textContent = 'Clearing...';
+            try {
+                const res = await fetch(`/api/competitions/${competitionCode}/clear-words`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('All words cleared from database! You can now upload fresh new words.', 'success');
+                    closeClearWordsModal();
+                } else {
+                    showToast(`Error: ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast(`Network error: ${err.message}`, 'danger');
+            } finally {
+                confirmClearWordsBtnEl.disabled = false;
+                confirmClearWordsBtnEl.textContent = 'Yes, Clear All Words';
             }
         });
     }

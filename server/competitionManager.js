@@ -496,6 +496,20 @@ class Competition {
         return { success: true };
     }
 
+    clearAllWords() {
+        const wordsLoader = require('./wordsLoader');
+        wordsLoader.clearWords();
+        this.state.questions = wordsLoader.get20Questions();
+        this.state.gridState = {};
+        this.state.questions.forEach(q => {
+            this.state.gridState[q.boxNo] = 'available';
+        });
+        this.state.usedWords = [];
+        this.state.activeQuestion = null;
+        this.saveState();
+        return { success: true };
+    }
+
     destroy() {
         try {
             if (fs.existsSync(this.stateFile)) {

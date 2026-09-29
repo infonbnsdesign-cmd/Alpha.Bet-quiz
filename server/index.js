@@ -17,17 +17,65 @@ app.use(express.json());
 const publicPath = path.join(__dirname, '../public');
 app.use(express.static(publicPath));
 
-// --- AUDIO SERVING ---
-// 1. External audio library (Alpha.bet face 2)
+// --- AUDIO SERVING & LOOKUP ---
 const externalAudioPath = path.resolve(__dirname, '../../Alpha.bet face 2/audio');
-if (fs.existsSync(externalAudioPath)) {
-    console.log(`[Server] Found external audio library at ${externalAudioPath}`);
-    app.use('/audio', express.static(externalAudioPath));
-}
-// 2. Local uploaded audio (takes priority via Express order)
 const uploadedAudioPath = path.join(publicPath, 'audio/uploaded');
 fs.mkdirSync(uploadedAudioPath, { recursive: true });
+
+// Smart case-insensitive audio finder: matches 'apple', 'Apple', 'APPLE', 'apple.mp3', 'Apple.wav', etc.
+function findAudioFileForWord(word) {
+    if (!word) return null;
+    const clean = String(word).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+    const searchDirs = [
+        uploadedAudioPath,
+        path.join(publicPath, 'audio'),
+        externalAudioPath
+    ];
+
+    const audioExts = ['.mp3', '.wav', '.ogg', '.m4a', '.aac'];
+
+    for (const dir of searchDirs) {
+        if (!dir || !fs.existsSync(dir)) continue;
+        try {
+            const files = fs.readdirSync(dir);
+            for (const file of files) {
+                const ext = path.extname(file).toLowerCase();
+                if (!audioExts.includes(ext)) continue;
+                const base = path.basename(file, ext).toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+                if (base === clean) {
+                    return path.join(dir, file);
+                }
+            }
+        } catch (e) {}
+    }
+    return null;
+}
+
+// API: Audio lookup endpoint by word name (case-insensitive: matches 'Apple', 'apple', 'APPLE', etc.)
+app.get('/api/audio-lookup/:word', (req, res) => {
+    const word = req.params.word;
+    const filePath = findAudioFileForWord(word);
+    if (filePath && fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+    }
+    return res.status(404).send('Audio not found');
+});
+
+// Serve direct /audio/:filename requests with case-insensitive fallback
+app.get('/audio/:filename', (req, res, next) => {
+    const rawName = req.params.filename;
+    const wordName = path.basename(rawName, path.extname(rawName));
+    const filePath = findAudioFileForWord(wordName);
+    if (filePath && fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+    }
+    next();
+});
+
 app.use('/audio/uploaded', express.static(uploadedAudioPath));
+if (fs.existsSync(externalAudioPath)) {
+    app.use('/audio', express.static(externalAudioPath));
+}
 
 // --- MULTER CONFIGS ---
 // Word bank Excel upload (memory)
@@ -120,6 +168,16 @@ app.post('/api/competitions/:code/upload-words', requireCompetition, excelUpload
         return res.json({ success: true, count: result.count });
     }
     return res.status(400).json({ success: false, error: result.error });
+});
+
+// API: Clear all words from database
+app.post('/api/competitions/:code/clear-words', requireCompetition, (req, res) => {
+    req.competition.clearAllWords();
+    broadcastState(req.competition);
+    return res.json({ 
+        success: true, 
+        message: 'All words have been cleared. You can now upload fresh new words.' 
+    });
 });
 
 // API: Upload custom Excel student list
